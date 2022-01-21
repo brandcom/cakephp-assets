@@ -33,8 +33,13 @@ class TextAssetPreviewHelper extends Helper
     private function csvPreview(AssetsAsset $asset, array $options = []): string
     {
         $reader = $asset->getCsvReader($options);
-        $header = $reader->getHeader();
-        $rows = $reader->getRecords();
+
+        try {
+            $header = $reader->getHeader();
+            $rows = $reader->getRecords();
+        } catch (\Exception $e) {
+            return 'Error with CSV: ' . $e->getMessage();
+        }
 
         return $this->getView()->element('Helper/TextAssetPreview/csv-table', [
             'header' => $header,
