@@ -3,7 +3,8 @@
 namespace Assets\Utilities;
 
 use Assets\Model\Entity\AssetsAsset;
-use App\View\AppView;
+use Assets\View\AppView;
+use Cake\Core\Configure;
 use Cake\View\Helper\HtmlHelper;
 use Intervention\Image\Filters\FilterInterface;
 use Intervention\Image\Image;
@@ -252,8 +253,7 @@ class ImageAsset
     private function render(): bool
     {
         $manager = new ImageManager([
-            // TODO (Gong Live) 'driver' => 'imagick',
-            'driver' => 'gd'
+            'driver' => Configure::read('AssetsPlugin.ImageAsset.driver', 'gd')
         ]);
 
         $image = $manager->make($this->asset->absolute_path);

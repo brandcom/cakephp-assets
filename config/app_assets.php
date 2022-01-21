@@ -8,6 +8,10 @@ return [
         'AssetsTable' => [
             'DisplayField' => 'title',
             'Behaviors' => [],
+        ],
+        'ImageAsset' => [
+            // driver can be 'imagick' or 'gd'
+            'driver' => 'gd'
         ]
     ],
 ];
