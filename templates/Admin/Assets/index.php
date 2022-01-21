@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \App\View\AppView $this
+ * @var \Assets\View\AppView $this
  * @var \Assets\Model\Entity\AssetsAsset[]|\Cake\Collection\CollectionInterface $assets
  */
 ?>
@@ -12,16 +12,16 @@
             <thead>
                 <tr>
                     <th>
-                        <?= $this->Paginator->sort('title', 'Titel') ?> /
-                        <?= $this->Paginator->sort('filesize', 'Größe') ?>
+                        <?= $this->Paginator->sort('title') ?> /
+                        <?= $this->Paginator->sort('filesize') ?>
                     </th>
                     <th>
-                        <?= $this->Paginator->sort('category', 'Kat.') ?> /
-                        <?= $this->Paginator->sort('filename', 'Datei') ?>
+                        <?= $this->Paginator->sort('category') ?> /
+                        <?= $this->Paginator->sort('filename') ?>
                     </th>
                     <th>
-                        <?= $this->Paginator->sort('created', 'Erstellt') ?> /
-                        <?= $this->Paginator->sort('modified', 'Geändert') ?>
+                        <?= $this->Paginator->sort('created') ?> /
+                        <?= $this->Paginator->sort('modified') ?>
                     </th>
                     <th>Vorschau</th>
                     <th class="actions"><?= __('Actions') ?></th>
@@ -39,7 +39,7 @@
                     </td>
                     <td>
                         <p>
-                            <?= \App\Enum\AssetCategories::nice($asset->category) ?>
+                            <?= h($asset->category) ?>
                         </p>
                         <p>
                             <small><?= h($asset->filename) ?></small>

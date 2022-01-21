@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \App\View\AppView $this
+ * @var \Assets\View\AppView $this
  * @var \Assets\Model\Entity\AssetsAsset $asset
  */
 ?>
@@ -20,7 +20,7 @@
             <h3><?= h($asset->title) ?></h3>
             <?php if ($asset->isImage()): ?>
                 <p>
-                    <?= $asset->getImage(65)->setCSS("my-class randcom-class")->scaleWidth(\Assets\Enum\ImageSizes::SM)->toJpg() ?>
+                    <?= $asset->getImage(65)->scaleWidth(\Assets\Enum\ImageSizes::SM)->toJpg() ?>
                 </p>
             <?php endif; ?>
             <table>
@@ -33,8 +33,8 @@
                     <td><?= h($asset->title) ?></td>
                 </tr>
                 <tr>
-                    <th><?= __('Kategorie') ?></th>
-                    <td><?= \App\Enum\AssetCategories::nice($asset->category) ?></td>
+                    <th><?= __('Category') ?></th>
+                    <td><?= h($asset->category) ?></td>
                 </tr>
                 <tr>
                     <th><?= __('Filename') ?></th>
@@ -71,7 +71,7 @@
                 <div class="text">
                     <strong><?= __('Inhalt') ?></strong>
                     <div>
-                        <?= $this->AssetContent->plainTextPreview($asset) ?>
+                        <?= $this->TextAssetPreview->plainTextPreview($asset) ?>
                     </div>
                 </div>
             <?php endif; ?>

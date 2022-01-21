@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \App\View\AppView $this
+ * @var \Assets\View\AppView $this
  * @var \Assets\Model\Entity\AssetsAsset $asset
  */
 ?>
@@ -25,9 +25,7 @@
                 <?php
                     echo $this->Form->control('title');
                     echo $this->Form->control('description');
-                    echo $this->Form->control('category', [
-                        'options' => \App\Enum\AssetCategories::getList()
-                    ]);
+                    echo $this->Form->control('category');
                     echo $this->Form->control('filename', ['type' => 'file']);
                 ?>
 
