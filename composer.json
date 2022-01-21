@@ -1,0 +1,29 @@
+{
+    "name": "passchn/cakephp-assets",
+    "description": "Asset management plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0",
+        "cakephp/cakephp": "^4.3",
+        "josegonzalez/cakephp-upload": "^6.0",
+        "league/csv": "^9.8",
+        "nette/finder": "^2.5",
+        "nette/utils": "^3.2",
+        "intervention/image": "^2.7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5 || ^9.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Test\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\Test\\": "tests/",
+            "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
+        }
+    }
+}
