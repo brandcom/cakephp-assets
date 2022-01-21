@@ -1,5 +1,32 @@
 # Assets plugin for CakePHP
 
+## What the plugin does
+
+This plugin helps you to manage backend Assets which can be of any filetype. Assets are 
+saved in a non-public folder and are handled by an AssetsTable. 
+
+You can create AssetEntities with useful methods:
+
+### General methods
+
+* Check `$asset->exists()` is the uploaded file still is there.
+* `$asset->getFileSizeInfo()` prints a human-readable filesize.
+
+### Image rendering 
+
+* Call `echo $asset->getImage()->scaleWidth(350)->toWebP()->addCSS('my-class')` to render a WebP-thumbnail as HTML. 
+* The rendered image will be saved in `webroot/img/modified` depending on the modifications and passed options. 
+* Pass your custom InterventionImage Filters through `ImageAsset::applyFilter()`
+* You can call any InterventionImage API method through `ImageAsset::modify()`
+
+### CSV preview 
+
+* You can use the `TextAssetPreviewHelper` to render tables from CSV-files. 
+
+### Alibi-properties for any model
+
+* `$asset` can be `$user->image`, `$company->logo` or your latest CSV import. Just configure a `belongsTo` relation on your model and set the ClassName.
+
 ## Installation
 
 You can install this plugin into your CakePHP application using [composer](https://getcomposer.org).
@@ -49,7 +76,7 @@ You can now upload your Userimage e.g. in `Users/add.php`:
 <?= $this->Form->create($magazine, ['type' => 'file']) ?>
     ...
     ...
-    <?= $this->Form->control('coverimage_id', ['options' => $coverimages, 'empty' => true]) ?>
+    <?= $this->Form->control('userimage_id', ['options' => $userimages, 'empty' => true]) ?>
     ...
 <?= $this->Form->end() ?>
 ```
