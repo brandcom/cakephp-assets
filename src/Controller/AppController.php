@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Assets\Controller;
 
-use App\Controller\AppController as BaseController;
 use Assets\Model\Table\AssetsAssetsTable;
+use Cake\Controller\Controller;
 
-class AppController extends BaseController
+class AppController extends Controller
 {
     protected AssetsAssetsTable $Assets;
 

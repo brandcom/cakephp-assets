@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Assets\Controller\admin;
+namespace Assets\Controller\Admin;
 
 use Assets\Controller\AppController;
 use function __;
