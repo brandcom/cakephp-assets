@@ -53,7 +53,7 @@ class ImageAsset
         $this->image = null;
         $this->format = null;
         $this->css = "image-asset";
-        $this->outputDirectory = DS . Configure::read('App.imageBaseUrl') . DS . 'modified' . DS;
+        $this->outputDirectory = DS . Configure::read('App.imageBaseUrl') . 'modified' . DS;
 
         $this->trackModification('constructor', ['quality' => $quality], true);
     }
