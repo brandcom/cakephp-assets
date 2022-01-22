@@ -182,7 +182,7 @@ class AssetsAsset extends Entity
 
         return Router::url([
             'plugin' => 'Assets',
-            'prefic' => 'Admin',
+            'prefix' => 'Admin',
             'controller' => 'Assets',
             'action' => 'download',
             $this->id,
