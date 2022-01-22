@@ -6,6 +6,7 @@ namespace Assets\Model\Entity;
 use Assets\Enum\ImageSizes;
 use Assets\Utilities\ImageAsset;
 use Cake\ORM\Entity;
+use Cake\Routing\Router;
 use League\Csv\Reader;
 use Nette\Utils\Arrays;
 use Nette\Utils\FileSystem;
@@ -168,5 +169,24 @@ class AssetsAsset extends Entity
         $reader->setHeaderOffset($options['csv_header_offset'] ?? 0);
 
         return $reader;
+    }
+
+    public function getDownloadLink(bool $force_download=false): string
+    {
+        $download = $this->isViewableInBrowser() ? '0' : '1';
+        if ($force_download) {
+            $download = '1';
+        }
+
+        return Router::url([
+            'plugin' => 'Assets',
+            'prefic' => 'Admin',
+            'controller' => 'Assets',
+            'action' => 'download',
+            $this->id,
+            '?' => [
+                'download' => $download,
+            ],
+        ]);
     }
 }
