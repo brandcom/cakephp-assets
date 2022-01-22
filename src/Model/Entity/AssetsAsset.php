@@ -114,14 +114,19 @@ class AssetsAsset extends Entity
         return new ImageAsset($this, $quality);
     }
 
-    public function getThumbnail(): ?string
+    public function getThumbnail(int $size = ImageSizes::THMB): ?string
     {
         if (!$this->exists()) {
             return __d('assets', "File not found. ");
         }
 
+
         if ($this->isImage()) {
-            return $this->getImage(65)->scaleWidth(ImageSizes::THMB)->setCSS('asset-thumbnail')->toJpg()->getHTML();
+            try {
+                return $this->getImage(65)->scaleWidth($size)->setCSS('asset-thumbnail')->toJpg()->getHTML();
+            } catch (\Exception $e) {
+                return __d('assets', "Cannot get ImageAsset. ");
+            }
         }
 
         return null;
