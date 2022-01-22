@@ -76,9 +76,23 @@ You can now upload your Userimage e.g. in `Users/add.php`:
 <?= $this->Form->create($magazine, ['type' => 'file']) ?>
     ...
     ...
-    <?= $this->Form->control('userimage_id', ['options' => $userimages, 'empty' => true]) ?>
+    <?= $this->Form->control('userimage.filename', ['options' => $userimages, 'empty' => true]) ?>
     ...
 <?= $this->Form->end() ?>
+```
+
+In order for this to work, the relation should be set properly, e.g. through `bin/cake bake users`, so that 
+CakePHP knows that your `$user->userimage` is an `AssetsAsset` Entity. Note that you have to contain
+`Userimages` in your Controller or Table's finder methods: 
+
+```
+$users = $this->Users->find()->contain([
+        'Userimages',
+        'Addresses,
+        '...
+    ]);
+    
+$image = $users->first()->userimage?->getImage();
 ```
 
 The Assets table won't save where the file came from. You can use the title, description, or category field to keep track of that. 
