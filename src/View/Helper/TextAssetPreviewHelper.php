@@ -24,22 +24,29 @@ class TextAssetPreviewHelper extends Helper
             return __('The Asset\'s file does not exist. ');
         }
 
-        return match ($asset->filetype) {
-            'csv' => $this->csvPreview($asset, $options),
-            default => '<pre>' . h($asset->read()) . '</pre>',
-        };
+        try {
+            switch ($asset->filetype) {
+                case 'csv':
+                    return $this->csvPreview($asset, $options);
+                default:
+                    return $this->printFormatted($asset);
+            }
+        } catch (\Exception $e) {
+            return __d('assets', "Error at TextAssetPreviewHelper: The Asset #{$asset->id}'s file with the filetype {$asset->filetype} is not readable. ");
+        }
+
+    }
+
+    private function printFormatted(AssetsAsset $asset): string
+    {
+        return "<pre>" . h($asset->read()) . "</pre>";
     }
 
     private function csvPreview(AssetsAsset $asset, array $options = []): string
     {
         $reader = $asset->getCsvReader($options);
-
-        try {
-            $header = $reader->getHeader();
-            $rows = $reader->getRecords();
-        } catch (\Exception $e) {
-            return 'Error with CSV: ' . $e->getMessage();
-        }
+        $header = $reader->getHeader();
+        $rows = $reader->getRecords();
 
         return $this->getView()->element('Helper/TextAssetPreview/csv-table', [
             'header' => $header,

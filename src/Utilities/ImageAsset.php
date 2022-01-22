@@ -27,6 +27,14 @@ use const WWW_ROOT;
  */
 class ImageAsset
 {
+    private AssetsAsset $asset;
+
+    /**
+     * Quality for jpg-compression. Call toJpg().
+     * Does not work on other formats.
+     */
+    private int $quality;
+
     private array $modifications;
 
     private ?Image $image;
@@ -35,23 +43,17 @@ class ImageAsset
 
     private string $css;
 
-    /**
-     * Quality for jpg-compression. Call toJpg().
-     * Does not work on other formats.
-     */
-    private int $quality;
+    private string $outputDirectory;
 
-    const OUTPUT_DIRECTORY = 'img' . DS . 'modified' . DS;
-
-    public function __construct(
-        private AssetsAsset $asset,
-        int $quality = 90,
-    ) {
+    public function __construct(AssetsAsset $asset, int $quality = 90)
+    {
+        $this->asset = $asset;
+        $this->quality = $quality;
         $this->modifications = [];
         $this->image = null;
         $this->format = null;
         $this->css = "image-asset";
-        $this->quality = $quality;
+        $this->outputDirectory = DS . Configure::read('App.imageBaseUrl') . DS . 'modified' . DS;
 
         $this->trackModification('constructor', ['quality' => $quality], true);
     }
@@ -111,7 +113,7 @@ class ImageAsset
      *
      * @link https://image.intervention.io/v2
      */
-    public function modify(string $method, string|int ...$params): ImageAsset
+    public function modify(string $method, ...$params): ImageAsset
     {
         $this->trackModification($method, $params);
         return $this;
@@ -180,13 +182,13 @@ class ImageAsset
     {
         if ($file) {
 
-            return DS . self::OUTPUT_DIRECTORY . $file->getFilename();
+            return $this->outputDirectory . $file->getFilename();
         }
 
         $file = $this->getFile();
         if ($file) {
 
-            return DS . self::OUTPUT_DIRECTORY . $file->getFilename();
+            return $this->outputDirectory . $file->getFilename();
         }
 
         if ($this->image) {
@@ -201,7 +203,7 @@ class ImageAsset
             /**
              * Create a new filename.
              */
-            return DS . self::OUTPUT_DIRECTORY . $this->getAssetIdentifier() . '_' . $this->getModificationHash() . '.' . $format;
+            return $this->outputDirectory . $this->getAssetIdentifier() . '_' . $this->getModificationHash() . '.' . $format;
         }
 
         throw new \Exception("Cannot get Path for an Image that does not yet exist. The render() method must be called before getRelativePath(). ");
@@ -231,12 +233,12 @@ class ImageAsset
 
     private function getFile(): ?\SplFileInfo
     {
-        if (!is_dir(self::OUTPUT_DIRECTORY)) {
+        if (!is_dir(WWW_ROOT . ltrim($this->outputDirectory, DS))) {
             return null;
         }
 
         $files = Finder::findFiles($this->getAssetIdentifier() . '_' . $this->getModificationHash() . '*')
-            ->in(self::OUTPUT_DIRECTORY);
+            ->in(WWW_ROOT . ltrim($this->outputDirectory, DS));
 
         foreach ($files as $path => $SplFileInfo) {
 
@@ -248,7 +250,7 @@ class ImageAsset
 
     /**
      * Renders the Image and returns the
-     * relative path from OUTPUT_DIRECTORY
+     * relative path
      */
     private function render(): bool
     {
@@ -260,7 +262,7 @@ class ImageAsset
         $image = $this->applyModifications($image, $manager);
         $this->image = $image;
 
-        FileSystem::createDir(self::OUTPUT_DIRECTORY);
+        FileSystem::createDir(WWW_ROOT . ltrim($this->outputDirectory, DS));
 
         $image->save($this->getAbsolutePath(), $this->quality, $this->format);
 

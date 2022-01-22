@@ -7,6 +7,7 @@ use Assets\Enum\ImageSizes;
 use Assets\Utilities\ImageAsset;
 use Cake\ORM\Entity;
 use League\Csv\Reader;
+use Nette\Utils\Arrays;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Strings;
 
@@ -81,15 +82,14 @@ class AssetsAsset extends Entity
 
     public function isViewableInBrowser(): bool
     {
-        return $this->exists() &&
-            match (Strings::before($this->mimetype, '/')) {
-                'image', 'video' => true,
-                default => false,
-            } ||
-            match (Strings::after($this->mimetype, '/')) {
-                'pdf', 'json' => true,
-                default => false,
-            };
+        return Arrays::contains([
+                'image',
+                'video'
+            ], Strings::before($this->mimetype, '/'))
+            || Arrays::contains([
+                'pdf',
+                'json'
+            ], Strings::after($this->mimetype, '/'));
     }
 
     public function isImage(): bool
@@ -117,7 +117,7 @@ class AssetsAsset extends Entity
     public function getThumbnail(): ?string
     {
         if (!$this->exists()) {
-            return '<span class="error">' . __("Datei nicht gefunden. ") . '</span>';
+            return __d('assets', "File not found. ");
         }
 
         if ($this->isImage()) {
