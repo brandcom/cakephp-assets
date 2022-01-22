@@ -15,6 +15,11 @@ use function __;
  */
 class AssetsController extends AppController
 {
+    public function initialize(): void
+    {
+        parent::initialize();
+    }
+
     /**
      * Index method
      *
