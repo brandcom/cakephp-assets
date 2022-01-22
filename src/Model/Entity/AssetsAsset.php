@@ -23,6 +23,7 @@ use Nette\Utils\Strings;
  * @property string $filesize
  * @property string $filetype
  * @property string $absolute_path
+ * @property string $public_filename
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
  */
@@ -62,7 +63,7 @@ class AssetsAsset extends Entity
     public function read(): string
     {
         if (!$this->exists()) {
-            throw new \Exception("The File {$this->filename} for the Asset #{$this->id} ({$this->title}) does not exist in {$this->directory}.");
+            throw new \Exception("The File {$this->filename} for the Asset #{$this->id} does not exist in {$this->directory}.");
         }
 
         return FileSystem::read($this->absolute_path);
@@ -70,7 +71,7 @@ class AssetsAsset extends Entity
 
     protected function _getPublicFilename(): string
     {
-        return Strings::webalize($this->title) . '.' . $this->filetype;
+        return $this->title ? Strings::webalize($this->title) . '.' . $this->filetype : $this->filename;
     }
 
     protected function _getFiletype(): ?string
@@ -107,7 +108,7 @@ class AssetsAsset extends Entity
     public function getImage(int $quality=90): ImageAsset
     {
         if (!$this->isImage()) {
-            throw new \Exception("Cannot call Asset::getImage() on #{$this->id} ($this->title) with MimeType {$this->mimetype}.");
+            throw new \Exception("Cannot call Asset::getImage() on #{$this->id} with MimeType {$this->mimetype}.");
         }
 
         return new ImageAsset($this, $quality);

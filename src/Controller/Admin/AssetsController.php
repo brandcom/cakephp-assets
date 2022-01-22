@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Assets\Controller\Admin;
 
 use Assets\Controller\AppController;
+use Cake\Http\CallbackStream;
+use Cake\Http\Response;
 use function __;
 
 /**
@@ -106,27 +108,22 @@ class AssetsController extends AppController
     }
 
     /**
-     * @return void
-     *
      * Add ?download=1 to URL to download instead of view the file.
      */
-    public function download(string $id)
+    public function download(string $id): Response
     {
         $asset = $this->Assets->get($id);
+        $is_download = (bool)$this->getRequest()->getQuery('download');
 
-        $disposition = $this->getRequest()->getQuery('download') ? 'attachment' : 'inline';
+        $stream = new CallbackStream(function () use ($asset) {
+            return $asset->read();
+        });
 
-        header("Content-type: " . $asset->mimetype);
-        header("Content-Disposition: $disposition; filename=\"{$asset->public_filename}\"");
-        header("Pragma: no-cache");
-        header("Expires: 0");
+        $response = $this->response
+            ->withType($asset->mimetype)
+            ->withDisabledCache()
+            ->withBody($stream);
 
-        try {
-            echo $asset->read();
-        } catch (\Exception $e) {
-            echo __("Die Datei kann nicht geöffnet werden. ");
-        }
-
-        exit;
+        return $is_download ? $response->withDownload($asset->public_filename) : $response;
     }
 }
