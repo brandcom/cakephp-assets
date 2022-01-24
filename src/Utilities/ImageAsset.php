@@ -226,11 +226,7 @@ class ImageAsset
 
     private function getAssetIdentifier(): string
     {
-        $identifier = Strings::webalize($this->asset->filename);
-        $identifier = Strings::substring($identifier, 0, 12);
-        $identifier = $identifier . Strings::substring(md5($this->asset->id), 0, 3);
-
-        return $identifier;
+        return $this->asset->id;
     }
 
     private function getFile(): ?\SplFileInfo
