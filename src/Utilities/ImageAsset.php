@@ -141,19 +141,18 @@ class ImageAsset
      */
     public function getHTML(): string
     {
-        $image = null;
         $path = $this->getPath();
         $html = new HtmlHelper(new AppView());
 
         if (!$this->image) {
             $manager = new ImageManager();
-            $image = $manager->make($this->getAbsolutePath());
+            $this->image = $manager->make($this->getAbsolutePath());
         }
 
         return $html->image($path, [
             'alt' => $this->asset->description ?: $this->asset->title,
-            'width' => $this->image?->width() ?? $image?->width() ?? 255,
-            'heigh' => $this->image?->height() ?? $image?->height() ?? 255,
+            'width' => $this->image->width(),
+            'heigh' => $this->image->height(),
             'loading' => 'lazy',
             'class' => $this->css,
         ]);
@@ -255,7 +254,7 @@ class ImageAsset
     private function render(): bool
     {
         $manager = new ImageManager([
-            'driver' => Configure::read('AssetsPlugin.ImageAsset.driver', 'gd')
+            'driver' => Configure::read('AssetsPlugin.ImageAsset.driver', 'gd'),
         ]);
 
         $image = $manager->make($this->asset->absolute_path);
