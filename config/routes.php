@@ -15,15 +15,15 @@ Router::plugin(
 
 Router::prefix(
     "Admin",
-    ["path" => "/assets"],
     function (RouteBuilder $routes) {
-        $routes->fallbacks(DashedRoute::class);
-        $routes->plugin('Assets',
-            ['path' => '/assets'],
+        $routes->plugin(
+            "Assets",
+            ["path" => "/assets"],
             function (RouteBuilder $routes) {
                 $routes->setRouteClass(DashedRoute::class);
-
                 $routes->fallbacks(DashedRoute::class);
-            });
+            }
+        );
+        $routes->fallbacks(DashedRoute::class);
     }
 );
