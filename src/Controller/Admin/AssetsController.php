@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Assets\Controller\Admin;
 
 use Assets\Controller\AppController;
+use Assets\Model\Table\AssetsAssetsTable;
 use Cake\Http\CallbackStream;
 use Cake\Http\Response;
 use function __;
@@ -12,6 +13,7 @@ use function __;
  * Assets Controller
  *
  * @method \Cake\ORM\Entity[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @property AssetsAssetsTable $AssetsAssets
  */
 class AssetsController extends AppController
 {
@@ -50,7 +52,7 @@ class AssetsController extends AppController
      */
     public function add()
     {
-        $asset = $this->AssetsAssets->newEmptyEntity();
+        $asset = $this->AssetsAssets->newEntity();
         if ($this->request->is('post')) {
             $asset = $this->AssetsAssets->patchEntity($asset, $this->request->getData());
             if ($this->AssetsAssets->save($asset)) {

@@ -11,12 +11,10 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Laminas\Diactoros\UploadedFile;
 
 /**
  * AssetsAssets Model
  *
- * @method \Assets\Model\Entity\AssetsAsset newEmptyEntity()
  * @method \Assets\Model\Entity\AssetsAsset newEntity(array $data, array $options = [])
  * @method \Assets\Model\Entity\AssetsAsset[] newEntities(array $data, array $options = [])
  * @method \Assets\Model\Entity\AssetsAsset get($primaryKey, $options = [])
@@ -54,7 +52,7 @@ class AssetsAssetsTable extends Table
 
         $this->addBehavior('Josegonzalez/Upload.Upload', [
             'filename' => [
-                'nameCallback' => function ($table, EntityInterface $entity, UploadedFile $data, $field, $settings
+                'nameCallback' => function ($table, EntityInterface $entity, array $data, $field, $settings
                 ): string {
 
                     if (method_exists($this, 'fileNameCallback')) {
@@ -62,7 +60,7 @@ class AssetsAssetsTable extends Table
                     }
 
                     $now = new FrozenTime();
-                    $pathInfo = pathinfo((string)$data->getClientFilename());
+                    $pathInfo = pathinfo((string)$data['name']);
 
                     return $now->format('ymd') . '-' . $now->format('His') . '_' . $pathInfo['basename'];
                 },
