@@ -105,6 +105,9 @@ class AssetsAssetsTable extends Table
             ->allowEmptyString('category');
 
         $validator
+            ->allowEmptyFile('filename');
+
+        $validator
             ->scalar('directory')
             ->maxLength('directory', 255)
             ->notEmptyString('directory');
