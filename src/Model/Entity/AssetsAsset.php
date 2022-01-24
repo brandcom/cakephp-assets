@@ -59,6 +59,10 @@ class AssetsAsset extends Entity
 
     protected function _getAbsolutePath(): string
     {
+        if (is_array($this->filename)) {
+            return '';
+        }
+
         return ROOT . DS . $this->directory . DS . $this->filename;
     }
 
