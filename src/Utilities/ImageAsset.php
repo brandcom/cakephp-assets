@@ -145,7 +145,7 @@ class ImageAsset
         $html = new HtmlHelper(new AppView());
 
         if (!$this->image) {
-            $manager = new ImageManager();
+            $manager = $this->getImageManager();
             $this->image = $manager->make($this->getAbsolutePath());
         }
 
@@ -226,11 +226,7 @@ class ImageAsset
 
     private function getAssetIdentifier(): string
     {
-        $identifier = Strings::webalize($this->asset->filename);
-        $identifier = Strings::substring($identifier, 0, 12);
-        $identifier = $identifier . Strings::substring(md5($this->asset->id), 0, 3);
-
-        return $identifier;
+        return $this->asset->id;
     }
 
     private function getFile(): ?\SplFileInfo
@@ -256,11 +252,14 @@ class ImageAsset
      */
     private function render(): bool
     {
-        $manager = new ImageManager([
-            'driver' => Configure::read('AssetsPlugin.ImageAsset.driver', 'gd'),
-        ]);
+        $manager = $this->getImageManager();
 
-        $image = $manager->make($this->asset->absolute_path);
+        try {
+            $image = $manager->make($this->asset->absolute_path);
+        } catch (\Exception $e) {
+            throw new \Exception("Could not call ImageManager::make on Asset #{$this->asset->id}. Error: {$e->getMessage()}.");
+        }
+
         $image = $this->applyModifications($image, $manager);
         $this->image = $image;
 
@@ -297,5 +296,14 @@ class ImageAsset
         }
 
         return $image;
+    }
+
+    private function getImageManager(): ImageManager
+    {
+        $driver = Configure::read('AssetsPlugin.ImageAsset.driver', 'gd');
+
+        return new ImageManager([
+            'driver' => $driver,
+        ]);
     }
 }
