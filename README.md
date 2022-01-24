@@ -12,4 +12,4 @@ You can require this branch in your `composer.json` like so:
 }, ...
 ```
 
-See the README.md on the [master branch](https://github.com/passchn/cakephp-assets/tree/cake3) for further instructions. 
+See the README.md on the [master branch](https://github.com/passchn/cakephp-assets/tree/master) for further instructions. 
