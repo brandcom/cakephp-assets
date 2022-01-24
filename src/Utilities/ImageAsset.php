@@ -167,7 +167,7 @@ class ImageAsset
      * set $noApi to true if the modification should not be called in
      * applyModifications(). It will just be relevant for the ModificationHash.
      */
-    private function trackModification(string $method, string|int|array $params, bool $noApi = false): void
+    private function trackModification(string $method, $params, bool $noApi = false): void
     {
         if ($noApi) {
             $this->modifications['noApi'][$method] = $params;
@@ -218,7 +218,10 @@ class ImageAsset
      */
     private function getModificationHash(): string
     {
-        return md5($this->asset->id . $this->asset->modified?->getTimestamp() . Json::encode($this->modifications));
+        $modified = $this->asset->modified;
+        $timestamp = $modified ? $modified->getTimestamp() : null;
+
+        return md5($this->asset->id . $timestamp . Json::encode($this->modifications));
     }
 
     private function getAssetIdentifier(): string
