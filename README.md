@@ -1,3 +1,7 @@
+This **cake3 branch** is for CakePHP 3 compatibility. 
+
+---
+
 # Assets plugin for CakePHP
 
 ## What the plugin does

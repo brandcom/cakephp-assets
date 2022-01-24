@@ -1,20 +1,23 @@
 <?php
 
 use Cake\Routing\Route\DashedRoute;
+use Cake\Routing\Router;
 use Cake\Routing\RouteBuilder;
 
-return static function (RouteBuilder $routes) {
-    $routes->plugin(
-        'Assets',
-        ['path' => '/assets'],
-        function (RouteBuilder $routes) {
-            $routes->setRouteClass(DashedRoute::class);
+Router::plugin(
+    'Assets',
+    ['path' => '/assets'],
+    function (RouteBuilder $routes) {
+        $routes->setRouteClass(DashedRoute::class);
+        $routes->fallbacks(DashedRoute::class);
+    }
+);
 
-            $routes->fallbacks(DashedRoute::class);
-        });
-
-
-    $routes->prefix('Admin', function (RouteBuilder $routes) {
+Router::prefix(
+    "Admin",
+    ["path" => "/assets"],
+    function (RouteBuilder $routes) {
+        $routes->fallbacks(DashedRoute::class);
         $routes->plugin('Assets',
             ['path' => '/assets'],
             function (RouteBuilder $routes) {
@@ -22,7 +25,5 @@ return static function (RouteBuilder $routes) {
 
                 $routes->fallbacks(DashedRoute::class);
             });
-        $routes->fallbacks(DashedRoute::class);
-    });
-};
-
+    }
+);

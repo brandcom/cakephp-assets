@@ -6,9 +6,6 @@ namespace Assets;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
-use Cake\Http\MiddlewareQueue;
-use Cake\Routing\RouteBuilder;
-use Cake\Console\CommandCollection;
 
 /**
  * Plugin for Assets
@@ -26,8 +23,9 @@ class Plugin extends BasePlugin
      */
     public function bootstrap(PluginApplicationInterface $app): void
     {
+        parent::bootstrap($app);
         Configure::load('Assets.app_assets');
         Configure::load('app');
-        Configure::load('app_local');
+        $app->addPlugin(self::class);
     }
 }
