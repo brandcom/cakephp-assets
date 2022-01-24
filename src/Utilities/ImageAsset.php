@@ -252,11 +252,17 @@ class ImageAsset
      */
     private function render(): bool
     {
+        $driver = Configure::read('AssetsPlugin.ImageAsset.driver', 'gd');
         $manager = new ImageManager([
-            'driver' => Configure::read('AssetsPlugin.ImageAsset.driver', 'gd')
+            'driver' => $driver,
         ]);
 
-        $image = $manager->make($this->asset->absolute_path);
+        try {
+            $image = $manager->make($this->asset->absolute_path);
+        } catch (\Exception $e) {
+            throw new \Exception("Could not call ImageManager::make on Asset #{$this->asset->id} with driver $driver. Error: {$e->getMessage()}.");
+        }
+
         $image = $this->applyModifications($image, $manager);
         $this->image = $image;
 
