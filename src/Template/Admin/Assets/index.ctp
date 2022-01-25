@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \Assets\View\AppView $this
- * @var \Assets\Model\Entity\AssetsAsset[]|\Cake\Collection\CollectionInterface $assets
+ * @var \Assets\Model\Entity\Asset[]|\Cake\Collection\CollectionInterface $assets
  */
 ?>
 <div class="assets index content">

@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \Assets\View\AppView $this
- * @var \Assets\Model\Entity\AssetsAsset $asset
+ * @var \Assets\Model\Entity\Asset $asset
  */
 ?>
 <div class="row">

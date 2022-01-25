@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Assets\Controller\Admin;
 
 use Assets\Controller\AppController;
-use Assets\Model\Table\AssetsAssetsTable;
+use Assets\Model\Table\AssetsTable;
 use Cake\Http\CallbackStream;
 use Cake\Http\Response;
 use function __;
@@ -13,7 +13,7 @@ use function __;
  * Assets Controller
  *
  * @method \Cake\ORM\Entity[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
- * @property AssetsAssetsTable $AssetsAssets
+ * @property AssetsTable $Assets
  */
 class AssetsController extends AppController
 {
@@ -24,7 +24,7 @@ class AssetsController extends AppController
      */
     public function index()
     {
-        $assets = $this->paginate($this->AssetsAssets);
+        $assets = $this->paginate($this->Assets);
 
         $this->set(compact('assets'));
     }
@@ -38,7 +38,7 @@ class AssetsController extends AppController
      */
     public function view($id = null)
     {
-        $asset = $this->AssetsAssets->get($id, [
+        $asset = $this->Assets->get($id, [
             'contain' => [],
         ]);
 
@@ -52,10 +52,10 @@ class AssetsController extends AppController
      */
     public function add()
     {
-        $asset = $this->AssetsAssets->newEntity();
+        $asset = $this->Assets->newEntity();
         if ($this->request->is('post')) {
-            $asset = $this->AssetsAssets->patchEntity($asset, $this->request->getData());
-            if ($this->AssetsAssets->save($asset)) {
+            $asset = $this->Assets->patchEntity($asset, $this->request->getData());
+            if ($this->Assets->save($asset)) {
                 $this->Flash->success(__('The asset has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -74,12 +74,12 @@ class AssetsController extends AppController
      */
     public function edit($id = null)
     {
-        $asset = $this->AssetsAssets->get($id, [
+        $asset = $this->Assets->get($id, [
             'contain' => [],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $asset = $this->AssetsAssets->patchEntity($asset, $this->request->getData());
-            if ($this->AssetsAssets->save($asset)) {
+            $asset = $this->Assets->patchEntity($asset, $this->request->getData());
+            if ($this->Assets->save($asset)) {
                 $this->Flash->success(__('The asset has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -99,8 +99,8 @@ class AssetsController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $asset = $this->AssetsAssets->get($id);
-        if ($this->AssetsAssets->delete($asset)) {
+        $asset = $this->Assets->get($id);
+        if ($this->Assets->delete($asset)) {
             $this->Flash->success(__('The asset has been deleted.'));
         } else {
             $this->Flash->error(__('The asset could not be deleted. Please, try again.'));
@@ -114,7 +114,7 @@ class AssetsController extends AppController
      */
     public function download(string $id): Response
     {
-        $asset = $this->AssetsAssets->get($id);
+        $asset = $this->Assets->get($id);
         $is_download = (bool)$this->getRequest()->getQuery('download');
 
         $stream = new CallbackStream(function () use ($asset) {
