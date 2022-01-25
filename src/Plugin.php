@@ -24,9 +24,21 @@ class Plugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
-        Configure::load('Assets.app_assets');
-        Configure::load('app_assets');
-        Configure::load('app');
+
+        $configs = [
+            'Assets.app_assets',
+            'app_assets',
+            'app',
+        ];
+
+        foreach ($configs as $config) {
+            try {
+                Configure::load($config);
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+
         $app->addPlugin(self::class);
     }
 }
