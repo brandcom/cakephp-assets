@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Assets\View\Helper;
 
-use Assets\Model\Entity\AssetsAsset;
+use Assets\Model\Entity\Asset;
 use Cake\View\Helper;
 
 /**
@@ -18,7 +18,7 @@ class TextAssetPreviewHelper extends Helper
      */
     protected $_defaultConfig = [];
 
-    public function plainTextPreview(AssetsAsset $asset, array $options = []): string
+    public function plainTextPreview(Asset $asset, array $options = []): string
     {
         if (!$asset->exists()) {
             return __('The Asset\'s file does not exist. ');
@@ -37,12 +37,12 @@ class TextAssetPreviewHelper extends Helper
 
     }
 
-    private function printFormatted(AssetsAsset $asset): string
+    private function printFormatted(Asset $asset): string
     {
         return "<pre>" . h($asset->read()) . "</pre>";
     }
 
-    private function csvPreview(AssetsAsset $asset, array $options = []): string
+    private function csvPreview(Asset $asset, array $options = []): string
     {
         $reader = $asset->getCsvReader($options);
         $header = $reader->getHeader();

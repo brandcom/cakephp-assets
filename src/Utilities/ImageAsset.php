@@ -2,7 +2,7 @@
 
 namespace Assets\Utilities;
 
-use Assets\Model\Entity\AssetsAsset;
+use Assets\Model\Entity\Asset;
 use Assets\View\AppView;
 use Cake\Core\Configure;
 use Cake\View\Helper\HtmlHelper;
@@ -27,7 +27,7 @@ use const WWW_ROOT;
  */
 class ImageAsset
 {
-    private AssetsAsset $asset;
+    private Asset $asset;
 
     /**
      * Quality for jpg-compression. Call toJpg().
@@ -45,7 +45,7 @@ class ImageAsset
 
     private string $outputDirectory;
 
-    public function __construct(AssetsAsset $asset, int $quality = 90)
+    public function __construct(Asset $asset, int $quality = 90)
     {
         $this->asset = $asset;
         $this->quality = $quality;
