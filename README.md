@@ -61,15 +61,19 @@ You can use the Assets table to upload files from any model, say you have a `use
 and need a user image:
 1. Create a field `userimage_id` in the `users` table.
 2. Run the migrations. 
-3. Now you need to tell CakePHP that your `Userimage` is not a real Entity, but comes from the `Assets.AssetsAssetsTable` (sorry) table: 
+3. Now you need to tell CakePHP that your `Userimage` is not a real Entity, but comes from the `Assets.AssetsTable` table: 
 
 ```
 in \App\Model\Table\Users: 
 
 $this->belongsTo('Userimages')
     ->setForeignKey('userimage_id')
-    ->setClassName('Assets.AssetsAssets');
+    ->setClassName('Assets.Assets');
 ```
+**Changes**
+> New in Version 0.1.3: `AssetsAssetsTable` is now `AssetsTable`, `AssetsAsset` is `Asset`.
+> 
+> Don't do this anymore: `->setClassName('Assets.AssetsAssets')`
 
 You can now upload your Userimage e.g. in `Users/add.php`: 
 ```
