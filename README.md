@@ -78,12 +78,15 @@ $this->belongsTo('Userimages')
 > 
 > Don't do this anymore: `->setClassName('Assets.AssetsAssets')`
 
-You can now upload your Userimage e.g. in `Users/add.php`: 
+You can now put an upload field for your Userimage e.g. in `templates/Users/edit.php`: 
 ```
-<?= $this->Form->create($magazine, ['type' => 'file']) ?>
+<?= $this->Form->create($user, ['type' => 'file']) ?>
     ...
     ...
-    <?= $this->Form->control('userimage.filename', ['options' => $userimages, 'empty' => true]) ?>
+    <?= $this->Form->control('userimage.filename', [
+        'type' => 'file', 
+        'label' => 'Upload a profile photo',
+    ]) ?>
     ...
 <?= $this->Form->end() ?>
 ```
