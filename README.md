@@ -109,7 +109,7 @@ The AssetsTable does not know which model the uploaded file belongs to. You can 
 
 To do this, you can inject custom behaviors into the AssetsTable to hook into Event Handlers (e.g., set the `title` on `beforeSave()`), or to create custom finder methods, e.g. by your defined categories. 
 
-In your config file `app.php`, `app_local.php`, or `app_assets.php`, you can override the [default settings](https://github.com/passchn/cakephp-assets/blob/master/config/app_assets.php).
+In your config file `app.php`, `app_local.php`, or `app_assets.php`, you can override the [default settings](https://github.com/passchn/cakephp-assets/blob/master/config/app_assets.php) and add custom Behaviors.
 
 ## File manipulation 
 

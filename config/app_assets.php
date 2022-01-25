@@ -11,6 +11,10 @@ return [
             // path where original files are saved.
             'assetsDir' => "resources" . DS . "assets" . DS,
             'displayField' => 'title',
+            /**
+             * List of Behaviors (strings).
+             * See AssetsTable::addCustomBehaviors()
+             */
             'Behaviors' => [],
         ],
         'ImageAsset' => [

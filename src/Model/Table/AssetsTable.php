@@ -73,9 +73,7 @@ class AssetsTable extends Table
             ],
         ]);
 
-        foreach (Configure::read('AssetsPlugin.AssetsTable.Behaviors') ?? []  as $behavior) {
-            $this->addBehavior($behavior);
-        }
+        $this->addCustomBehaviors();
     }
 
     /**
@@ -130,5 +128,23 @@ class AssetsTable extends Table
     public static function getAssetsDir(): string
     {
         return Configure::read('AssetsPlugin.AssetsTable.assetsDir');
+    }
+
+    /**
+     * Example:
+     * Pass your AssetFileNameBehavior to the table, where you define a fileNameCallback() method
+     * to manipulate how your uploaded files will be renamed in the Josegonzalez/UploadBehavior.
+     * See AssetsTable::initialize()
+     *
+     * You can also define methods like beforeFind() or afterSave()
+     * @link https://book.cakephp.org/4/en/orm/table-objects.html#lifecycle-callbacks
+     * @link https://book.cakephp.org/4/en/orm/behaviors.html
+     */
+    private function addCustomBehaviors()
+    {
+        $customBehaviors = Configure::read('AssetsPlugin.AssetsTable.Behaviors') ?? [];
+        foreach ($customBehaviors as $behavior) {
+            $this->addBehavior($behavior);
+        }
     }
 }
