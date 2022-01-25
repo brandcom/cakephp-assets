@@ -23,10 +23,27 @@ class Plugin extends BasePlugin
      */
     public function bootstrap(PluginApplicationInterface $app): void
     {
-        Configure::load('Assets.app_assets');
-        Configure::load('app');
-        Configure::load('app_local');
+        $this->loadConfig();
 
         $app->addPlugin('Josegonzalez/Upload');
+    }
+
+    private function loadConfig(): void
+    {
+        Configure::load('Assets.app_assets');
+
+        $configs = [
+            'app_assets',
+            'app',
+            'app_local',
+        ];
+
+        foreach ($configs as $config) {
+            try {
+                Configure::load($config);
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
     }
 }

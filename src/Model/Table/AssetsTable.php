@@ -34,8 +34,6 @@ use Laminas\Diactoros\UploadedFile;
  */
 class AssetsTable extends Table
 {
-    const ASSETS_DIR = "resources" . DS . "assets" . DS;
-
     /**
      * Initialize method
      *
@@ -71,7 +69,7 @@ class AssetsTable extends Table
                     'size' => 'filesize',
                     'type' => 'mimetype',
                 ],
-                'path' => self::ASSETS_DIR,
+                'path' => self::getAssetsDir(),
             ],
         ]);
 
@@ -127,5 +125,10 @@ class AssetsTable extends Table
     public function beforeFind(EventInterface $e, Query $query, \ArrayObject $options, $primary)
     {
         return $query->orderDesc('modified');
+    }
+
+    public static function getAssetsDir(): string
+    {
+        return Configure::read('AssetsPlugin.AssetsTable.assetsDir');
     }
 }
