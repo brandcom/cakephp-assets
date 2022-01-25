@@ -26,5 +26,7 @@ class Plugin extends BasePlugin
         Configure::load('Assets.app_assets');
         Configure::load('app');
         Configure::load('app_local');
+
+        $app->addPlugin('Josegonzalez/Upload');
     }
 }
