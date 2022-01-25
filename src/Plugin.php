@@ -39,6 +39,6 @@ class Plugin extends BasePlugin
             }
         }
 
-        $app->addPlugin(self::class);
+        $app->addPlugin('Josegonzalez/Upload');
     }
 }
