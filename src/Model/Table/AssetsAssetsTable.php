@@ -32,8 +32,6 @@ use Cake\Validation\Validator;
  */
 class AssetsAssetsTable extends Table
 {
-    const ASSETS_DIR = "resources" . DS . "assets" . DS;
-
     /**
      * Initialize method
      *
@@ -69,7 +67,7 @@ class AssetsAssetsTable extends Table
                     'size' => 'filesize',
                     'type' => 'mimetype',
                 ],
-                'path' => self::ASSETS_DIR,
+                'path' => self::getAssetsDir(),
             ],
         ]);
 
@@ -128,5 +126,10 @@ class AssetsAssetsTable extends Table
     public function beforeFind(EventInterface $e, Query $query, \ArrayObject $options, $primary)
     {
         return $query->orderDesc('modified');
+    }
+
+    public static function getAssetsDir(): string
+    {
+        return Configure::read('AssetsPlugin.AssetsTable.assetsDir');
     }
 }

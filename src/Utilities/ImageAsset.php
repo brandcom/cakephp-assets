@@ -53,7 +53,7 @@ class ImageAsset
         $this->image = null;
         $this->format = null;
         $this->css = "image-asset";
-        $this->outputDirectory = DS . Configure::read('App.imageBaseUrl') . 'modified' . DS;
+        $this->outputDirectory = Configure::read("AssetsPlugin.ImageAsset.outDir");
 
         $this->trackModification('constructor', ['quality' => $quality], true);
     }
@@ -300,7 +300,7 @@ class ImageAsset
 
     private function getImageManager(): ImageManager
     {
-        $driver = Configure::read('AssetsPlugin.ImageAsset.driver', 'gd');
+        $driver = Configure::read('AssetsPlugin.ImageAsset.driver');
 
         return new ImageManager([
             'driver' => $driver,
