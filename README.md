@@ -9,8 +9,9 @@ You can create AssetEntities with useful methods:
 
 ### General methods
 
-* Check `$asset->exists()` is the uploaded file still is there.
+* Check if the uploaded file still is there: `$asset->exists() // true or false` 
 * `$asset->getFileSizeInfo()` prints a human-readable filesize.
+* Get a link to the AssetsController::download() (Admin-prefixed): `$asset->getDownloadLink()`
 
 ### Image rendering 
 
@@ -22,6 +23,7 @@ You can create AssetEntities with useful methods:
 ### CSV preview 
 
 * You can use the `TextAssetPreviewHelper` to render tables from CSV-files. 
+* Loop through rows in a csv-Asset: `foreach ($asset->getReader()->getRecords() as $row) ...`
 
 ### Alibi-properties for any model
 
@@ -42,25 +44,26 @@ Load the plugin:
  bin/cake plugin load Assets
 ```
 
-Your uploaded files will be saved in the `assets_assets` table. Run the Migrations
-to create the table: 
+Run the Migrations to create the plugin tables: 
 ```
 bin/cake migrations migrate -p Assets
 ```
+
+Now you should have an `assets_assets` and an `assets_phinxlog` table in your database. 
 
 ## Uploading Files
 
 ### AssetsController
 
 You can directly upload files using the AssetsController. By default, you can access
-the index, view, and edit-methods through an `Admin` prefix. 
+the index, view, and edit-methods through an `Admin` prefix: `your-app.test/admin/assets/assets` 
 
 ### Use Alibi names 
 
 You can use the Assets table to upload files from any model, say you have a `users` table
 and need a user image:
-1. Create a field `userimage_id` in the `users` table.
-2. Run the migrations. 
+1. Create a field `userimage_id` in the `users` table as nullable `char(36)` (UUID).
+2. Run the migrations: `bin/cake bake users`
 3. Now you need to tell CakePHP that your `Userimage` is not a real Entity, but comes from the `Assets.AssetsTable` table: 
 
 ```
@@ -154,7 +157,9 @@ This plugin was no plugin from the beginning and we are working on making it usa
 
 As this package is in early development as a plugin, we don't expect it to fit in for a lot of use cases right now.  
 
-If you have questions or problems with the plugin, you can also contact me via email:  
+If you have questions or problems with the plugin, open an Issue on GitHub.  
+
+You can also contact me via email:  
 [psc@brandcom.de](mailto:psc@brandcom.de) 
 
 ## Packages this plugin uses
