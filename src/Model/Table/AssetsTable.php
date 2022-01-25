@@ -45,7 +45,7 @@ class AssetsTable extends Table
         parent::initialize($config);
 
         $this->setTable('assets_assets');
-        $this->setDisplayField(Configure::read('AssetsPlugin.AssetsTable.DisplayField', 'title'));
+        $this->setDisplayField(Configure::read('AssetsPlugin.AssetsTable.displayField', 'title'));
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
