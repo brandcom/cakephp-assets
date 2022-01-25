@@ -25,6 +25,7 @@ class Plugin extends BasePlugin
     {
         parent::bootstrap($app);
         Configure::load('Assets.app_assets');
+        Configure::load('app_assets');
         Configure::load('app');
         $app->addPlugin(self::class);
     }

@@ -9,7 +9,7 @@ return [
     'AssetsPlugin' => [
         'AssetsTable' => [
             // path where original files are saved.
-            'assetsDir' => ROOT . DS . "resources" . DS . "assets" . DS,
+            'assetsDir' => "resources" . DS . "assets" . DS,
             'displayField' => 'title',
             'Behaviors' => [],
         ],
