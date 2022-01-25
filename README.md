@@ -92,7 +92,7 @@ You can now put an upload field for your Userimage e.g. in `templates/Users/edit
 ```
 
 In order for this to work, the relation should be set properly, e.g. through `bin/cake bake users`, so that 
-CakePHP knows that your `$user->userimage` is an `AssetsAsset` Entity. Note that you have to contain
+CakePHP knows that your `$user->userimage` is an `Asset` Entity. Note that you have to contain
 `Userimages` in your Controller or Table's finder methods: 
 
 ```
@@ -105,25 +105,11 @@ $users = $this->Users->find()->contain([
 $image = $users->first()->userimage?->getImage();
 ```
 
-The Assets table won't save where the file came from. You can use the title, description, or category field to keep track of that. 
+The AssetsTable does not know which model the uploaded file belongs to. You can use the `title`, `description`, or `category` field to keep track of that. 
 
-You can inject custom behaviors into the Assets table to hook into Event Handlers, or to create custom finder methods. 
+To do this, you can inject custom behaviors into the AssetsTable to hook into Event Handlers (e.g., set the `title` on `beforeSave()`), or to create custom finder methods, e.g. by your defined categories. 
 
-In your `app.php`, you can override the default settings: 
-```
-/**
- * Configuration for the Assets Plugin
- */
-'AssetsPlugin' => [
-    'AssetsTable' => [
-        'DisplayField' => 'description', 
-        'Behaviors' => [
-            'MyFinderBehavior',
-            'CategoryCheckBehavior',
-        ]
-    ]
-],
-```
+In your config file `app.php`, `app_local.php`, or `app_assets.php`, you can override the [default settings](https://github.com/passchn/cakephp-assets/blob/master/config/app_assets.php).
 
 ## File manipulation 
 
