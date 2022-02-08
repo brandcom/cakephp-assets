@@ -48,7 +48,7 @@ class TextAssetPreviewHelper extends Helper
         $header = $reader->getHeader();
         $rows = $reader->getRecords();
 
-        return $this->getView()->element('Helper/TextAssetPreview/csv-table', [
+        return $this->getView()->element('Assets.Helper/TextAssetPreview/csv-table', [
             'header' => $header,
             'rows' => $rows,
         ]);
