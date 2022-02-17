@@ -52,9 +52,15 @@ class Asset extends Entity
         'modified' => true,
     ];
 
+    /**
+     * When submitting a Form with a file upload field which is left blank,
+     * $this->filename will be an invalid Laminas\Diactoros\UploadedFile.
+     *
+     * Therefore, this function checks if the field is a string to get a valid response.
+     */
     public function exists(): bool
     {
-        return file_exists($this->absolute_path);
+        return is_string($this->filename) && file_exists($this->absolute_path);
     }
 
     protected function _getAbsolutePath(): string
