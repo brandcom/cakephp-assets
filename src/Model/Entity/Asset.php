@@ -91,11 +91,11 @@ class Asset extends Entity
     {
         return Arrays::contains([
                 'image',
-                'video'
+                'video',
             ], Strings::before($this->mimetype, '/'))
             || Arrays::contains([
                 'pdf',
-                'json'
+                'json',
             ], Strings::after($this->mimetype, '/'));
     }
 
@@ -112,7 +112,7 @@ class Asset extends Entity
             && Strings::before($this->mimetype, '/') === 'text';
     }
 
-    public function getImage(int $quality=90): ImageAsset
+    public function getImage(int $quality = 90): ImageAsset
     {
         if (!$this->isImage()) {
             throw new \Exception("Cannot call Asset::getImage() on #{$this->id} with MimeType {$this->mimetype}.");
@@ -121,7 +121,7 @@ class Asset extends Entity
         return new ImageAsset($this, $quality);
     }
 
-    public function getThumbnail(int $size = ImageSizes::THMB, bool $html=true): ?string
+    public function getThumbnail(int $size = ImageSizes::THMB, bool $html = true): ?string
     {
         if (!$this->exists()) {
             return __d('assets', "File not found. ");
@@ -179,7 +179,7 @@ class Asset extends Entity
         return $reader;
     }
 
-    public function getDownloadLink(bool $force_download=false): string
+    public function getDownloadLink(bool $force_download = false): string
     {
         $download = $this->isViewableInBrowser() ? '0' : '1';
         if ($force_download) {
@@ -196,5 +196,51 @@ class Asset extends Entity
                 'download' => $download,
             ],
         ]);
+    }
+
+    /**
+     * Move the file to a folder in webroot
+     *
+     * $path: set path from webroot where the copy will be available
+     * $filename: set the new filename. Default will be the Asset's id (uuid)
+     *
+     * $config:
+     * - no_prefix:
+     *  If not set to true, a prefix will be prepended to the filename depending on the modification date.
+     *  If set to true, new Versions will not be detected. You will have to change the filename accordingly, or empty the folder set in $path.
+     */
+    public function moveToWebroot(?string $filename = null, ?string $path = "files", array $config = []): string
+    {
+        $default_config = [
+            'no_prefix' => false,
+        ];
+
+        $config = array_merge($default_config, $config);
+
+        $prefix = null;
+        if (empty($config['no_prefix'])) {
+            $prefix = Strings::substring(md5($this->modified->toDateTimeString()), 0, 3) . '-';
+        }
+
+        $path = str_replace(WWW_ROOT, '', $path);
+        $path = ltrim($path, '/');
+        $path = WWW_ROOT . $path . DS;
+        $filename = $filename ? $prefix . $filename : $prefix . $this->id;
+        $filename = str_replace($this->filetype, '', $filename);
+        $filename = rtrim($filename, '.');
+        $filename = $filename . '.' . $this->filetype;
+        $full_path = $path . $filename;
+
+        if (file_exists($full_path)) {
+            return str_replace(WWW_ROOT, '', $full_path);
+        }
+
+        if (!$this->exists()) {
+            throw new \Exception("The file for Asset #{$this->id} does not exist. ");
+        }
+
+        FileSystem::copy($this->absolute_path, $full_path);
+
+        return str_replace(WWW_ROOT, '', $full_path);
     }
 }
