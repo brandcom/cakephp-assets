@@ -37,6 +37,10 @@ class PictureHelper extends Helper
      */
     public function webp(?ImageAsset $image, array $widths = [300, 500], array $params = []): ?string
     {
+        if (!$image) {
+            return null;
+        }
+
         $this->image = $image;
         sort($widths);
 
