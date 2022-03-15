@@ -140,6 +140,27 @@ an alt-parameter with the Asset's title and correct `width` and `height` params.
 
 Image manipulation is done through Intervention with GD as default, but you can enable imagick through your app.php config. 
 
+#### Rendering of `<picture>` elements
+
+Load the PictureHelper in your `AppView.php`: 
+```
+$this->loadHelper('Assets.Picture');
+```
+In a template, pass an `ImageAsset` to the Helper as well as an array of widths and params:  
+
+```
+<?= $this->Picture->webp(
+    $user->photo->modify('resize', 350, 600),
+    [150, 350],
+    [
+        'class' => 'user-img',
+        'width' => 350,
+        'height' => 600,
+        'sizes' => "(min-width: 230px) 100vw, (min-width: 640px) 50vw"
+    ]
+) ?>
+```
+
 ## Feedback, Bugs, and Feature Requests
 
 This plugin was no plugin from the beginning and we are working on making it usable now among different CakePHP installations. 
