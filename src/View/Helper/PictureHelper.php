@@ -44,14 +44,19 @@ class PictureHelper extends Helper
         $this->image = $image;
         sort($widths);
 
+        $sizes = $params['sizes'] ?? "100vw";
+        unset($params['sizes']);
+
         return $this->Html->tag('picture',
             $this->Html->tag('source', null, [
                 'type' => 'image/webp',
                 'srcset' => $this->getSrcSet('webp', $widths),
+                'sizes' => $sizes,
             ])
             . $this->Html->tag('source', null, [
                 'type' => 'image/jpeg',
                 'srcset' => $this->getSrcSet('jpeg', $widths),
+                'sizes' => $sizes,
             ])
             . $this->Html->image($this->image->scaleWidth(current($widths))->toJpg()->getPath(), $params)
         );
