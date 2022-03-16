@@ -43,6 +43,8 @@ class ImageAsset
 
     private string $css;
 
+    private bool $lazyLoading;
+
     private string $outputDirectory;
 
     public function __construct(Asset $asset, int $quality = 90)
@@ -52,6 +54,7 @@ class ImageAsset
         $this->modifications = [];
         $this->image = null;
         $this->format = null;
+        $this->lazyLoading = true;
         $this->css = "image-asset";
         $this->outputDirectory = Configure::read("AssetsPlugin.ImageAsset.outDir");
 
@@ -88,6 +91,15 @@ class ImageAsset
     public function setCSS(string $css): ImageAsset
     {
         $this->css = $css;
+        return $this;
+    }
+
+    /**
+     * Control if the image shall be loaded lazily when rendered as Html.
+     */
+    public function setLazyLoading(bool $lazyLoading = true): ImageAsset
+    {
+        $this->lazyLoading = $lazyLoading;
         return $this;
     }
 
@@ -152,8 +164,8 @@ class ImageAsset
         return $html->image($path, [
             'alt' => $this->asset->description ?: $this->asset->title,
             'width' => $this->image->width(),
-            'loading' => 'lazy',
             'height' => $this->image->height(),
+            'loading' => $this->lazyLoading ? 'lazy' : 'eager',
             'class' => $this->css,
         ]);
     }
