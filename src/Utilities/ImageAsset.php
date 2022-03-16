@@ -152,8 +152,8 @@ class ImageAsset
         return $html->image($path, [
             'alt' => $this->asset->description ?: $this->asset->title,
             'width' => $this->image->width(),
-            'heigh' => $this->image->height(),
             'loading' => 'lazy',
+            'height' => $this->image->height(),
             'class' => $this->css,
         ]);
     }
