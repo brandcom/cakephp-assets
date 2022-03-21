@@ -58,7 +58,7 @@ class PictureHelper extends Helper
                 'srcset' => $this->getSrcSet('jpeg', $widths),
                 'sizes' => $sizes,
             ])
-            . $this->Html->image($this->image->scaleWidth(current($widths))->toJpg()->getPath(), $params)
+            . $this->image->scaleWidth(current($widths))->toJpg()->getHTML($params)
         );
     }
 
