@@ -151,7 +151,7 @@ class ImageAsset
     /**
      * Renders the ImageAsset as a HTML element.
      */
-    public function getHTML(): string
+    public function getHTML(array $params = []): string
     {
         $path = $this->getPath();
         $html = new HtmlHelper(new AppView());
@@ -161,13 +161,17 @@ class ImageAsset
             $this->image = $manager->make($this->getAbsolutePath());
         }
 
-        return $html->image($path, [
+        $default_params = [
             'alt' => $this->asset->description ?: $this->asset->title,
             'width' => $this->image->width(),
             'height' => $this->image->height(),
             'loading' => $this->lazyLoading ? 'lazy' : 'eager',
             'class' => $this->css,
-        ]);
+        ];
+
+        $params = array_merge($default_params, $params);
+
+        return $html->image($path, $params);
     }
 
     public function __toString(): string
