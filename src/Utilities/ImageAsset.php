@@ -53,7 +53,7 @@ class ImageAsset
         $this->quality = $quality;
         $this->modifications = [];
         $this->image = null;
-        $this->format = null;
+        $this->format = $this->asset->filetype;
         $this->lazyLoading = true;
         $this->css = "image-asset";
         $this->outputDirectory = Configure::read("AssetsPlugin.ImageAsset.outDir");
@@ -251,12 +251,10 @@ class ImageAsset
             return null;
         }
 
-        $files = Finder::findFiles($this->getAssetIdentifier() . '_' . $this->getModificationHash() . '*')
-            ->in(WWW_ROOT . ltrim($this->outputDirectory, DS));
+        $path = WWW_ROOT . ltrim($this->outputDirectory, DS) . $this->getAssetIdentifier() . '_' . $this->getModificationHash() . '.' . $this->format;
 
-        foreach ($files as $path => $SplFileInfo) {
-
-            return $SplFileInfo;
+        if (file_exists($path)) {
+            return new \SplFileInfo($path);
         }
 
         return null;
