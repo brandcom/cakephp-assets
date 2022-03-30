@@ -43,6 +43,8 @@ class ImageAsset
 
     private string $css;
 
+    private bool $lazyLoading;
+
     private string $outputDirectory;
 
     public function __construct(Asset $asset, int $quality = 90)
@@ -51,7 +53,8 @@ class ImageAsset
         $this->quality = $quality;
         $this->modifications = [];
         $this->image = null;
-        $this->format = null;
+        $this->format = $this->asset->filetype;
+        $this->lazyLoading = true;
         $this->css = "image-asset";
         $this->outputDirectory = Configure::read("AssetsPlugin.ImageAsset.outDir");
 
@@ -88,6 +91,15 @@ class ImageAsset
     public function setCSS(string $css): ImageAsset
     {
         $this->css = $css;
+        return $this;
+    }
+
+    /**
+     * Control if the image shall be loaded lazily when rendered as Html.
+     */
+    public function setLazyLoading(bool $lazyLoading = true): ImageAsset
+    {
+        $this->lazyLoading = $lazyLoading;
         return $this;
     }
 
@@ -139,7 +151,7 @@ class ImageAsset
     /**
      * Renders the ImageAsset as a HTML element.
      */
-    public function getHTML(): string
+    public function getHTML(array $params = []): string
     {
         $path = $this->getPath();
         $html = new HtmlHelper(new AppView());
@@ -149,13 +161,17 @@ class ImageAsset
             $this->image = $manager->make($this->getAbsolutePath());
         }
 
-        return $html->image($path, [
+        $default_params = [
             'alt' => $this->asset->description ?: $this->asset->title,
             'width' => $this->image->width(),
-            'heigh' => $this->image->height(),
-            'loading' => 'lazy',
+            'height' => $this->image->height(),
+            'loading' => $this->lazyLoading ? 'lazy' : 'eager',
             'class' => $this->css,
-        ]);
+        ];
+
+        $params = array_merge($default_params, $params);
+
+        return $html->image($path, $params);
     }
 
     public function __toString(): string
@@ -235,12 +251,10 @@ class ImageAsset
             return null;
         }
 
-        $files = Finder::findFiles($this->getAssetIdentifier() . '_' . $this->getModificationHash() . '*')
-            ->in(WWW_ROOT . ltrim($this->outputDirectory, DS));
+        $path = WWW_ROOT . ltrim($this->outputDirectory, DS) . $this->getAssetIdentifier() . '_' . $this->getModificationHash() . '.' . $this->format;
 
-        foreach ($files as $path => $SplFileInfo) {
-
-            return $SplFileInfo;
+        if (file_exists($path)) {
+            return new \SplFileInfo($path);
         }
 
         return null;
