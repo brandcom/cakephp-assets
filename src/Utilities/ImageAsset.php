@@ -313,7 +313,7 @@ class ImageAsset
         try {
             $image = $manager->make($this->asset->absolute_path);
         } catch (\Exception $e) {
-            throw new \Exception("Could not call ImageManager::make on Asset #{$this->asset->id}. Error: {$e->getMessage()}.");
+            throw new \Exception("Could not call ImageManager::make on Asset #{$this->asset->id}. Error: {$e->getMessage()}. Image path: {$this->asset->absolute_path}.");
         }
 
         $image = $this->applyModifications($image, $manager);
