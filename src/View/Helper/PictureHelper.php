@@ -29,15 +29,25 @@ class PictureHelper extends Helper
     /**
      * Returns an html picture element with a webp and jpeg source, and a fallback img element.
      *
-     * @param ImageAsset|null $image
+     * @param ImageAsset|string|null $image
+     * -> a path to a static file can be passed.
+     *
      * @param int[] $widths
      * @param array $params
      * @return string|null
      * @throws \Exception
      */
-    public function webp(?ImageAsset $image, array $widths = [300, 500], array $params = []): ?string
+    public function webp($image, array $widths = [300, 500], array $params = []): ?string
     {
         if (!$image) {
+            return null;
+        }
+
+        if (is_string($image)) {
+            $image = ImageAsset::createFromPath($image);
+        }
+
+        if (!is_a($image, ImageAsset::class)) {
             return null;
         }
 
