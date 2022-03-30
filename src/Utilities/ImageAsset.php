@@ -91,7 +91,7 @@ class ImageAsset
         $asset = new Asset();
         $asset->id = md5($path);
         $asset->filename = $splFileInfo->getFilename();
-        $asset->directory = ltrim($splFileInfo->getPath(), ROOT);
+        $asset->directory = ltrim(str_replace(ROOT, '', $splFileInfo->getPath()), DS);
         $asset->mimetype = mime_content_type($absolute_path);
         $asset->title = $options['title'] ?? null;
         $asset->description = null;
