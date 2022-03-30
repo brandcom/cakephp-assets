@@ -5,6 +5,8 @@ namespace Assets\Utilities;
 use Assets\Model\Entity\Asset;
 use Assets\View\AppView;
 use Cake\Core\Configure;
+use Cake\I18n\FrozenTime;
+use Cake\Utility\Text;
 use Cake\View\Helper\HtmlHelper;
 use Intervention\Image\Filters\FilterInterface;
 use Intervention\Image\Image;
@@ -59,6 +61,46 @@ class ImageAsset
         $this->outputDirectory = Configure::read("AssetsPlugin.ImageAsset.outDir");
 
         $this->trackModification('constructor', ['quality' => $quality], true);
+    }
+
+    /**
+     * Create an instance from a static file.
+     *
+     * @param string $path absolute path or image in /img folder
+     * @param array $options - optional:
+     * - title (string): for alt-parameter in html-output
+     * - quality (int): for jpg compression
+     * @return ImageAsset
+     */
+    public static function createFromPath(string $path, array $options = []): ImageAsset
+    {
+        $absolute_path = null;
+        $img_dir = WWW_ROOT . Configure::read("App.imageBaseUrl");
+        if (file_exists($path)) {
+            $absolute_path = $path;
+        } elseif (file_exists($img_dir . $path)) {
+            $absolute_path = $img_dir . $path;
+        }
+
+        if (!$absolute_path) {
+            throw new \Exception("Could not find image with path {$path}.");
+        }
+
+        $splFileInfo = new \SplFileInfo($absolute_path);
+
+        $asset = new Asset();
+        $asset->id = md5($path);
+        $asset->filename = $splFileInfo->getFilename();
+        $asset->directory = $splFileInfo->getPath();
+        $asset->mimetype = mime_content_type($absolute_path);
+        $asset->title = $options['title'] ?? null;
+        $asset->description = null;
+        $asset->modified = new FrozenTime();
+        $asset->created = new FrozenTime();
+
+        $quality = $options['quality'] ?? 90;
+
+        return new ImageAsset($asset, (int)$quality);
     }
 
     /**
