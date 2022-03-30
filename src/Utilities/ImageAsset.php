@@ -91,12 +91,12 @@ class ImageAsset
         $asset = new Asset();
         $asset->id = md5($path);
         $asset->filename = $splFileInfo->getFilename();
-        $asset->directory = $splFileInfo->getPath();
+        $asset->directory = ltrim($splFileInfo->getPath(), ROOT);
         $asset->mimetype = mime_content_type($absolute_path);
         $asset->title = $options['title'] ?? null;
         $asset->description = null;
-        $asset->modified = new FrozenTime();
-        $asset->created = new FrozenTime();
+        $asset->modified = FrozenTime::createFromTimestamp($splFileInfo->getMTime());
+        $asset->created = $asset->modified;
 
         $quality = $options['quality'] ?? 90;
 
