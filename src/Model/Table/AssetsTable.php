@@ -71,7 +71,7 @@ class AssetsTable extends Table
             ],
         ]);
 
-        foreach (Configure::read('AssetsPlugin.AssetsTable.Behaviors') ?? []  as $behavior) {
+        foreach (Configure::read('AssetsPlugin.AssetsTable.Behaviors', [])  as $behavior) {
             $this->addBehavior($behavior);
         }
     }
@@ -130,6 +130,6 @@ class AssetsTable extends Table
 
     public static function getAssetsDir(): string
     {
-        return Configure::read('AssetsPlugin.AssetsTable.assetsDir');
+        return Configure::read('AssetsPlugin.AssetsTable.assetsDir', "resources" . DS . "assets" . DS);
     }
 }

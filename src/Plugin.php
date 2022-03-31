@@ -25,18 +25,8 @@ class Plugin extends BasePlugin
     {
         parent::bootstrap($app);
 
-        $configs = [
-            'Assets.app_assets',
-            'app_assets',
-            'app',
-        ];
-
-        foreach ($configs as $config) {
-            try {
-                Configure::load($config);
-            } catch (\Exception $e) {
-                continue;
-            }
+        if (file_exists(ROOT . DS . 'config' . DS . 'app_assets.php')) {
+            Configure::load('app_assets');
         }
 
         $app->addPlugin('Josegonzalez/Upload');

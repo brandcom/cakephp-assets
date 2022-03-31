@@ -58,7 +58,7 @@ class ImageAsset
         $this->format = $this->asset->filetype;
         $this->lazyLoading = true;
         $this->css = "image-asset";
-        $this->outputDirectory = Configure::read("AssetsPlugin.ImageAsset.outDir");
+        $this->outputDirectory = Configure::read("AssetsPlugin.ImageAsset.outDir", DS . Configure::read('App.imageBaseUrl') . 'modified' . DS);
 
         $this->trackModification('constructor', ['quality' => $quality], true);
     }
@@ -356,7 +356,7 @@ class ImageAsset
 
     private function getImageManager(): ImageManager
     {
-        $driver = Configure::read('AssetsPlugin.ImageAsset.driver');
+        $driver = Configure::read('AssetsPlugin.ImageAsset.driver', 'gd');
 
         return new ImageManager([
             'driver' => $driver,
