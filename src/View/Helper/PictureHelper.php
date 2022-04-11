@@ -57,22 +57,29 @@ class PictureHelper extends Helper
         $sizes = $params['sizes'] ?? "100vw";
         unset($params['sizes']);
 
+        $options = [
+            'filename' => $params['filename'] ?? null,
+        ];
+
+        unset($params['filename']);
+        $base_filename = $options['filename'] ? $options['filename'] . '-' . current($widths) . 'px' : null;
+
         return $this->Html->tag('picture',
             $this->Html->tag('source', null, [
                 'type' => 'image/webp',
-                'srcset' => $this->getSrcSet('webp', $widths),
+                'srcset' => $this->getSrcSet('webp', $widths, $options),
                 'sizes' => $sizes,
             ])
             . $this->Html->tag('source', null, [
                 'type' => 'image/jpeg',
-                'srcset' => $this->getSrcSet('jpeg', $widths),
+                'srcset' => $this->getSrcSet('jpeg', $widths, $options),
                 'sizes' => $sizes,
             ])
-            . $this->image->scaleWidth(current($widths))->toJpg()->getHTML($params)
+            . $this->image->scaleWidth(current($widths))->setFilename($base_filename)->toJpg()->getHTML($params)
         );
     }
 
-    private function getSrcSet(string $format, array $widths): ?string
+    private function getSrcSet(string $format, array $widths, array $options=[]): ?string
     {
         $links = [];
 
@@ -82,19 +89,21 @@ class PictureHelper extends Helper
                 throw new \Exception("\$widths must be a list of integers. ");
             }
 
-            $links[] = $this->getImageUrl($format, $width) . ' ' . $width . 'w';
+            $links[] = $this->getImageUrl($format, $width, $options) . ' ' . $width . 'w';
         }
 
         return implode(', ', $links);
     }
 
-    private function getImageUrl(string $format, int $width): string
+    private function getImageUrl(string $format, int $width, array $options): string
     {
+        $filename = $options['filename'] ? $options['filename'] . '-' . $width . 'px' : null;
+
         switch (strtolower($format)) {
             case "webp":
-                return $this->image->toWebp()->scaleWidth($width)->getPath();
+                return $this->image->toWebp()->scaleWidth($width)->setFilename($filename)->getPath();
             default:
-                return $this->image->toJpg()->scaleWidth($width)->getPath();
+                return $this->image->toJpg()->scaleWidth($width)->setFilename($filename)->getPath();
         }
     }
 }

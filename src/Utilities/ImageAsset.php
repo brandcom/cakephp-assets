@@ -154,7 +154,7 @@ class ImageAsset
      * Note: This will override the automatically generated name based on the file's modifications. You should
      * provide a unique name for each modified version.
      */
-    public function setFilename(string $filename): ImageAsset
+    public function setFilename(?string $filename): ImageAsset
     {
         $this->filename = $filename;
         return $this;
