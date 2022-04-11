@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Assets;
 
 use Cake\Core\BasePlugin;
-use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
 
 /**
@@ -23,27 +22,6 @@ class Plugin extends BasePlugin
      */
     public function bootstrap(PluginApplicationInterface $app): void
     {
-        $this->loadConfig();
-
         $app->addPlugin('Josegonzalez/Upload');
-    }
-
-    private function loadConfig(): void
-    {
-        Configure::load('Assets.app_assets');
-
-        $configs = [
-            'app_assets',
-            'app',
-            'app_local',
-        ];
-
-        foreach ($configs as $config) {
-            try {
-                Configure::load($config);
-            } catch (\Exception $e) {
-                continue;
-            }
-        }
     }
 }
