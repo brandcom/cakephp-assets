@@ -5,6 +5,8 @@ namespace Assets\Utilities;
 use Assets\Model\Entity\Asset;
 use Assets\View\AppView;
 use Cake\Core\Configure;
+use Cake\I18n\FrozenTime;
+use Cake\Utility\Text;
 use Cake\View\Helper\HtmlHelper;
 use Intervention\Image\Filters\FilterInterface;
 use Intervention\Image\Image;
@@ -56,9 +58,49 @@ class ImageAsset
         $this->format = $this->asset->filetype;
         $this->lazyLoading = true;
         $this->css = "image-asset";
-        $this->outputDirectory = Configure::read("AssetsPlugin.ImageAsset.outDir");
+        $this->outputDirectory = Configure::read("AssetsPlugin.ImageAsset.outDir", DS . Configure::read('App.imageBaseUrl') . 'modified' . DS);
 
         $this->trackModification('constructor', ['quality' => $quality], true);
+    }
+
+    /**
+     * Create an instance from a static file.
+     *
+     * @param string $path absolute path or image in /img folder
+     * @param array $options - optional:
+     * - title (string): for alt-parameter in html-output
+     * - quality (int): for jpg compression
+     * @return ImageAsset
+     */
+    public static function createFromPath(string $path, array $options = []): ImageAsset
+    {
+        $absolute_path = null;
+        $img_dir = WWW_ROOT . Configure::read("App.imageBaseUrl");
+        if (file_exists($path)) {
+            $absolute_path = $path;
+        } elseif (file_exists($img_dir . $path)) {
+            $absolute_path = $img_dir . $path;
+        }
+
+        if (!$absolute_path) {
+            throw new \Exception("Could not find image with path {$path}.");
+        }
+
+        $splFileInfo = new \SplFileInfo($absolute_path);
+
+        $asset = new Asset();
+        $asset->id = md5($path);
+        $asset->filename = $splFileInfo->getFilename();
+        $asset->directory = ltrim(str_replace(ROOT, '', $splFileInfo->getPath()), DS);
+        $asset->mimetype = mime_content_type($absolute_path);
+        $asset->title = $options['title'] ?? null;
+        $asset->description = null;
+        $asset->modified = FrozenTime::createFromTimestamp($splFileInfo->getMTime());
+        $asset->created = $asset->modified;
+
+        $quality = $options['quality'] ?? 90;
+
+        return new ImageAsset($asset, (int)$quality);
     }
 
     /**
@@ -271,7 +313,7 @@ class ImageAsset
         try {
             $image = $manager->make($this->asset->absolute_path);
         } catch (\Exception $e) {
-            throw new \Exception("Could not call ImageManager::make on Asset #{$this->asset->id}. Error: {$e->getMessage()}.");
+            throw new \Exception("Could not call ImageManager::make on Asset #{$this->asset->id}. Error: {$e->getMessage()}. Image path: {$this->asset->absolute_path}.");
         }
 
         $image = $this->applyModifications($image, $manager);
@@ -314,7 +356,7 @@ class ImageAsset
 
     private function getImageManager(): ImageManager
     {
-        $driver = Configure::read('AssetsPlugin.ImageAsset.driver');
+        $driver = Configure::read('AssetsPlugin.ImageAsset.driver', 'gd');
 
         return new ImageManager([
             'driver' => $driver,
