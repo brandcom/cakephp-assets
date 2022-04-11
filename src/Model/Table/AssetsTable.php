@@ -127,7 +127,7 @@ class AssetsTable extends Table
 
     public static function getAssetsDir(): string
     {
-        return Configure::read('AssetsPlugin.AssetsTable.assetsDir');
+        return Configure::read('AssetsPlugin.AssetsTable.assetsDir', "resources" . DS . "assets" . DS);
     }
 
     /**
@@ -142,7 +142,7 @@ class AssetsTable extends Table
      */
     private function addCustomBehaviors()
     {
-        $customBehaviors = Configure::read('AssetsPlugin.AssetsTable.Behaviors') ?? [];
+        $customBehaviors = Configure::read('AssetsPlugin.AssetsTable.Behaviors', []);
         foreach ($customBehaviors as $behavior) {
             $this->addBehavior($behavior);
         }
