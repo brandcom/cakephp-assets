@@ -309,8 +309,10 @@ class ImageAsset
 
     private function getFile(): ?\SplFileInfo
     {
-        if (file_exists($this->getAbsolutePath())) {
-            return new \SplFileInfo($this->getAbsolutePath());
+        $path = WWW_ROOT . ltrim($this->outputDirectory, DS) . $this->getFilename() . '.' . $this->format;
+
+        if (file_exists($path)) {
+            return new \SplFileInfo($path);
         }
 
         return null;
