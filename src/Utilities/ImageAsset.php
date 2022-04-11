@@ -43,6 +43,8 @@ class ImageAsset
 
     private ?string $format;
 
+    private ?string $filename;
+
     private string $css;
 
     private bool $lazyLoading;
@@ -56,6 +58,7 @@ class ImageAsset
         $this->modifications = [];
         $this->image = null;
         $this->format = $this->asset->filetype;
+        $this->filename = null;
         $this->lazyLoading = true;
         $this->css = "image-asset";
         $this->outputDirectory = Configure::read("AssetsPlugin.ImageAsset.outDir", DS . Configure::read('App.imageBaseUrl') . 'modified' . DS);
@@ -142,6 +145,18 @@ class ImageAsset
     public function setLazyLoading(bool $lazyLoading = true): ImageAsset
     {
         $this->lazyLoading = $lazyLoading;
+        return $this;
+    }
+
+    /**
+     * Set a custom filename for the modified file.
+     *
+     * Note: This will override the automatically generated name based on the file's modifications. You should
+     * provide a unique name for each modified version.
+     */
+    public function setFilename(string $filename): ImageAsset
+    {
+        $this->filename = $filename;
         return $this;
     }
 
@@ -235,6 +250,11 @@ class ImageAsset
         $this->modifications[$method] = $params;
     }
 
+    private function getFilename(): string
+    {
+        return $this->filename ?: $this->getAssetIdentifier() . '_' . $this->getModificationHash();
+    }
+
     private function getRelativePath(?\SplFileInfo $file = null): string
     {
         if ($file) {
@@ -260,7 +280,7 @@ class ImageAsset
             /**
              * Create a new filename.
              */
-            return $this->outputDirectory . $this->getAssetIdentifier() . '_' . $this->getModificationHash() . '.' . $format;
+            return $this->outputDirectory . $this->getFilename() . '.' . $format;
         }
 
         throw new \Exception("Cannot get Path for an Image that does not yet exist. The render() method must be called before getRelativePath(). ");
@@ -289,14 +309,8 @@ class ImageAsset
 
     private function getFile(): ?\SplFileInfo
     {
-        if (!is_dir(WWW_ROOT . ltrim($this->outputDirectory, DS))) {
-            return null;
-        }
-
-        $path = WWW_ROOT . ltrim($this->outputDirectory, DS) . $this->getAssetIdentifier() . '_' . $this->getModificationHash() . '.' . $this->format;
-
-        if (file_exists($path)) {
-            return new \SplFileInfo($path);
+        if (file_exists($this->getAbsolutePath())) {
+            return new \SplFileInfo($this->getAbsolutePath());
         }
 
         return null;
