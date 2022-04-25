@@ -22,5 +22,8 @@ return [
             // path where modified images are saved.
             'outDir' => DS . Configure::read('App.imageBaseUrl') . 'modified' . DS,
         ],
+        'Routes' => [
+            'adminPrefix' => 'admin',
+        ],
     ],
 ];
