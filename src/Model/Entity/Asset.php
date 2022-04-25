@@ -5,6 +5,7 @@ namespace Assets\Model\Entity;
 
 use Assets\Enum\ImageSizes;
 use Assets\Utilities\ImageAsset;
+use Cake\Core\Configure;
 use Cake\ORM\Entity;
 use Cake\Routing\Router;
 use League\Csv\Reader;
@@ -188,7 +189,7 @@ class Asset extends Entity
 
         return Router::url([
             'plugin' => 'Assets',
-            'prefix' => 'Admin',
+            'prefix' => Configure::read('AssetsPlugin.Routes.adminPrefix', 'Admin'),
             'controller' => 'Assets',
             'action' => 'download',
             $this->id,
