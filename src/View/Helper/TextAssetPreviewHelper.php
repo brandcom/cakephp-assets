@@ -18,6 +18,11 @@ class TextAssetPreviewHelper extends Helper
      */
     protected $_defaultConfig = [];
 
+    /**
+     * @param \Assets\Model\Entity\Asset $asset The asset entity
+     * @param array $options Options passed to the CSV Reader
+     * @return string
+     */
     public function plainTextPreview(Asset $asset, array $options = []): string
     {
         if (!$asset->exists()) {
@@ -32,16 +37,28 @@ class TextAssetPreviewHelper extends Helper
                     return $this->printFormatted($asset);
             }
         } catch (\Exception $e) {
-            return __d('assets', "Error at TextAssetPreviewHelper: The Asset #{$asset->id}'s file with the filetype {$asset->filetype} is not readable. ");
+            return __d('assets', "Error at TextAssetPreviewHelper: The Asset #{$asset->id}'s 
+            file with the filetype {$asset->filetype} is not readable. ");
         }
-
     }
 
+    /**
+     * @param \Assets\Model\Entity\Asset $asset The asset entity
+     * @return string
+     * @throws \Exception
+     */
     private function printFormatted(Asset $asset): string
     {
-        return "<pre>" . h($asset->read()) . "</pre>";
+        return '<pre>' . h($asset->read()) . '</pre>';
     }
 
+    /**
+     * @param \Assets\Model\Entity\Asset $asset The asset entity
+     * @param array $options Options passed to the CSV Reader
+     * @return string
+     * @throws \League\Csv\Exception
+     * @throws \League\Csv\InvalidArgument
+     */
     private function csvPreview(Asset $asset, array $options = []): string
     {
         $reader = $asset->getCsvReader($options);

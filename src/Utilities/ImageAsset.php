@@ -1,20 +1,20 @@
 <?php
+declare(strict_types=1);
 
 namespace Assets\Utilities;
 
+use Assets\Error\FileNotFoundException;
+use Assets\Error\FilterNotFoundException;
+use Assets\Error\UnkownErrorException;
 use Assets\Model\Entity\Asset;
 use Assets\View\AppView;
 use Cake\Core\Configure;
 use Cake\View\Helper\HtmlHelper;
-use Intervention\Image\Filters\FilterInterface;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Nette\Utils\FileSystem;
-use Nette\Utils\Finder;
 use Nette\Utils\Json;
 use Nette\Utils\Strings;
-use const DS;
-use const WWW_ROOT;
 
 /**
  * To be called through Assets::getImage() with MimeType image/*
@@ -47,6 +47,10 @@ class ImageAsset
 
     private string $outputDirectory;
 
+    /**
+     * @param \Assets\Model\Entity\Asset $asset The asset entity
+     * @param int $quality Quality between 0 - 100
+     */
     public function __construct(Asset $asset, int $quality = 90)
     {
         $this->asset = $asset;
@@ -55,8 +59,8 @@ class ImageAsset
         $this->image = null;
         $this->format = $this->asset->filetype;
         $this->lazyLoading = true;
-        $this->css = "image-asset";
-        $this->outputDirectory = Configure::read("AssetsPlugin.ImageAsset.outDir");
+        $this->css = 'image-asset';
+        $this->outputDirectory = Configure::read('AssetsPlugin.ImageAsset.outDir');
 
         $this->trackModification('constructor', ['quality' => $quality], true);
     }
@@ -64,58 +68,76 @@ class ImageAsset
     /**
      * Calls the Intervention API's "widen" method.
      * Preserves aspect ratio.
+     *
+     * @param int $width Width in px
+     * @return $this
      */
-    public function scaleWidth(int $width): ImageAsset
+    public function scaleWidth(int $width)
     {
         $this->trackModification('widen', [$width]);
+
         return $this;
     }
 
-    public function toWebp(): ImageAsset
+    /**
+     * @return $this
+     */
+    public function toWebp()
     {
         $this->trackModification('encode', ['webp']);
         $this->format = 'webp';
+
         return $this;
     }
 
-    public function toJpg(): ImageAsset
+    /**
+     * @return $this
+     */
+    public function toJpg()
     {
         $this->trackModification('encode', ['jpg']);
         $this->format = 'jpg';
+
         return $this;
     }
 
     /**
      * Set CSS classes for __toString() HTML output
+     *
+     * @param string $css HTML class which will be added on render
+     * @return $this
      */
-    public function setCSS(string $css): ImageAsset
+    public function setCSS(string $css)
     {
         $this->css = $css;
+
         return $this;
     }
 
     /**
-     * Control if the image shall be loaded lazily when rendered as Html.
+     * @param bool $lazyLoading Control if the image shall be loaded lazily when rendered as Html
+     * @return $this
      */
-    public function setLazyLoading(bool $lazyLoading = true): ImageAsset
+    public function setLazyLoading(bool $lazyLoading = true)
     {
         $this->lazyLoading = $lazyLoading;
+
         return $this;
     }
 
     /**
      * e.g.
      * ImageAsset::applyFilter(EpaperFilter::class, ['kombi'])
-     *
-     * $filer is the className (string) of the Filter.
-     * $properties will be passed after the ImageManager instance
-     * when calling the Filter's constructor.
-     *
      * !! Don't pass an ImageManager instance, only string or int properties.
+     *
+     * @param string $filter ClassName of the Filter
+     * @param array $properties Will be passed after the ImageManager instance when calling the Filter's constructor.
+     * @return $this
      */
-    public function applyFilter(string $filter, array $properties = []): ImageAsset
+    public function applyFilter(string $filter, array $properties = [])
     {
         $this->trackModification('filter_' . $filter, $properties);
+
         return $this;
     }
 
@@ -123,16 +145,26 @@ class ImageAsset
      * Experimental.
      * Wrapper for Intervention API methods.
      *
+     * @param string $method Method name
+     * @param mixed ...$params Params for the method
      * @link https://image.intervention.io/v2
+     * @return $this
      */
-    public function modify(string $method, ...$params): ImageAsset
+    public function modify(string $method, ...$params)
     {
         $this->trackModification($method, $params);
+
         return $this;
     }
 
     /**
      * Get the publicly accessible path (from /webroot)
+     *
+     * @return string
+     * @throws \Nette\Utils\JsonException
+     * @throws \Assets\Error\FileNotFoundException
+     * @throws \Assets\Error\FilterNotFoundException
+     * @throws \Assets\Error\UnkownErrorException
      */
     public function getPath(): string
     {
@@ -141,15 +173,16 @@ class ImageAsset
             return $this->getRelativePath($SplFileInfo);
         }
 
-        if ($this->render()) {
-            return $this->getRelativePath();
-        }
-
-        throw new \Exception("Cannot get path for ImageAsset for Asset #{$this->asset->id}");
+        return $this->render()
+            ->getRelativePath();
     }
 
     /**
-     * Renders the ImageAsset as a HTML element.
+     * Renders the ImageAsset as an HTML element.
+     *
+     * @param array $params Params for the image renderer
+     * @return string
+     * @throws \Exception
      */
     public function getHTML(array $params = []): string
     {
@@ -174,40 +207,51 @@ class ImageAsset
         return $html->image($path, $params);
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function __toString(): string
     {
         return $this->getHTML();
     }
 
     /**
-     * set $noApi to true if the modification should not be called in
-     * applyModifications(). It will just be relevant for the ModificationHash.
+     * @param string $method Modification method name
+     * @param mixed $params Params for that method
+     * @param bool $noApi set to true if the modification should not be called in applyModifications().
+     * It will just be relevant for the ModificationHash.
+     * @return void
      */
     private function trackModification(string $method, $params, bool $noApi = false): void
     {
         if ($noApi) {
             $this->modifications['noApi'][$method] = $params;
+
             return;
         }
 
         $this->modifications[$method] = $params;
     }
 
+    /**
+     * @param \SplFileInfo|null $file File instance
+     * @return string
+     * @throws \Nette\Utils\JsonException
+     * @throws \Assets\Error\FileNotFoundException
+     */
     private function getRelativePath(?\SplFileInfo $file = null): string
     {
         if ($file) {
-
             return $this->outputDirectory . $file->getFilename();
         }
 
         $file = $this->getFile();
         if ($file) {
-
             return $this->outputDirectory . $file->getFilename();
         }
 
         if ($this->image) {
-
             $mimeType = $this->image->mime();
             $format = $this->format ?: Strings::after($mimeType, '/');
 
@@ -221,9 +265,14 @@ class ImageAsset
             return $this->outputDirectory . $this->getAssetIdentifier() . '_' . $this->getModificationHash() . '.' . $format;
         }
 
-        throw new \Exception("Cannot get Path for an Image that does not yet exist. The render() method must be called before getRelativePath(). ");
+        throw new FileNotFoundException('Cannot get Path for an Image that does not yet exist. 
+            The render() method must be called before getRelativePath(). ');
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     private function getAbsolutePath(): string
     {
         return WWW_ROOT . ltrim($this->getRelativePath(), DS);
@@ -231,6 +280,9 @@ class ImageAsset
 
     /**
      * Returns an md5 sum based on the Asset-ID and the modifications.
+     *
+     * @return string
+     * @throws \Nette\Utils\JsonException
      */
     private function getModificationHash(): string
     {
@@ -240,11 +292,18 @@ class ImageAsset
         return md5($this->asset->id . $timestamp . Json::encode($this->modifications));
     }
 
+    /**
+     * @return string
+     */
     private function getAssetIdentifier(): string
     {
         return $this->asset->id;
     }
 
+    /**
+     * @return \SplFileInfo|null
+     * @throws \Nette\Utils\JsonException
+     */
     private function getFile(): ?\SplFileInfo
     {
         if (!is_dir(WWW_ROOT . ltrim($this->outputDirectory, DS))) {
@@ -261,17 +320,20 @@ class ImageAsset
     }
 
     /**
-     * Renders the Image and returns the
-     * relative path
+     * Renders the image and sets the relative path in $this->image
+     *
+     * @return $this
+     * @throws \Assets\Error\UnkownErrorException
+     * @throws \Assets\Error\FilterNotFoundException
      */
-    private function render(): bool
+    private function render()
     {
         $manager = $this->getImageManager();
 
         try {
             $image = $manager->make($this->asset->absolute_path);
         } catch (\Exception $e) {
-            throw new \Exception("Could not call ImageManager::make on Asset #{$this->asset->id}. Error: {$e->getMessage()}.");
+            throw new UnkownErrorException("Could not call ImageManager::make on Asset #{$this->asset->id}. Error: {$e->getMessage()}.");
         }
 
         $image = $this->applyModifications($image, $manager);
@@ -281,24 +343,29 @@ class ImageAsset
 
         $image->save($this->getAbsolutePath(), $this->quality, $this->format);
 
-        return true;
+        return $this;
     }
 
+    /**
+     * @param \Intervention\Image\Image $image The image instance
+     * @param \Intervention\Image\ImageManager $manager The manager instance
+     * @return \Intervention\Image\Image
+     * @throws \Assets\Error\FilterNotFoundException
+     */
     private function applyModifications(Image $image, ImageManager $manager): Image
     {
         $modifications = $this->modifications;
         unset($modifications['noApi']);
 
         foreach ($modifications as $method => $params) {
-
             if (Strings::contains($method, 'filter_')) {
                 $filterClassName = Strings::after($method, 'filter_') ?? '';
                 if (!class_exists($filterClassName)) {
-                    throw new \Exception("Filter {$filterClassName} does not exist. ");
+                    throw new FilterNotFoundException("Filter {$filterClassName} does not exist. ");
                 }
 
                 /**
-                 * @var FilterInterface $filter
+                 * @var \Intervention\Image\Filters\FilterInterface $filter
                  */
                 $filter = new $filterClassName($manager, ...$params);
                 $image = $filter->applyFilter($image);
@@ -312,6 +379,9 @@ class ImageAsset
         return $image;
     }
 
+    /**
+     * @return \Intervention\Image\ImageManager
+     */
     private function getImageManager(): ImageManager
     {
         $driver = Configure::read('AssetsPlugin.ImageAsset.driver');

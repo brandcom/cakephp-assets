@@ -28,6 +28,11 @@ class Plugin extends BasePlugin
         $app->addPlugin('Josegonzalez/Upload');
     }
 
+    /**
+     * Loads the config from the user
+     *
+     * @return void
+     */
     private function loadConfig(): void
     {
         Configure::load('Assets.app_assets');
