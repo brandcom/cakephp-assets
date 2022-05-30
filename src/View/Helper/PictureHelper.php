@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Assets\View\Helper;
 
+use Assets\Error\InvalidArgumentException;
 use Assets\Utilities\ImageAsset;
 use Cake\View\Helper;
 
@@ -27,11 +28,11 @@ class PictureHelper extends Helper
     private ImageAsset $image;
 
     /**
-     * Returns an html picture element with a webp and jpeg source, and a fallback img element.
+     * Returns a html picture element with a webp and jpeg source, and a fallback img element.
      *
-     * @param ImageAsset|null $image
-     * @param int[] $widths
-     * @param array $params
+     * @param \Assets\Utilities\ImageAsset|null $image The asset object
+     * @param int[] $widths Array of width which will be present in the SrcSet
+     * @param array $params Addition params like sizes
      * @return string|null
      * @throws \Exception
      */
@@ -44,10 +45,11 @@ class PictureHelper extends Helper
         $this->image = $image;
         sort($widths);
 
-        $sizes = $params['sizes'] ?? "100vw";
+        $sizes = $params['sizes'] ?? '100vw';
         unset($params['sizes']);
 
-        return $this->Html->tag('picture',
+        return $this->Html->tag(
+            'picture',
             $this->Html->tag('source', null, [
                 'type' => 'image/webp',
                 'srcset' => $this->getSrcSet('webp', $widths),
@@ -62,14 +64,19 @@ class PictureHelper extends Helper
         );
     }
 
+    /**
+     * @param string $format Which type of image you want
+     * @param array $widths Array of image widths you desire to have in the SrcSet
+     * @return string|null
+     * @throws \Assets\Error\InvalidArgumentException
+     */
     private function getSrcSet(string $format, array $widths): ?string
     {
         $links = [];
 
         foreach ($widths as $width) {
-
             if (!is_int($width)) {
-                throw new \Exception("\$widths must be a list of integers. ");
+                throw new InvalidArgumentException('$widths must be a list of integers.');
             }
 
             $links[] = $this->getImageUrl($format, $width) . ' ' . $width . 'w';
@@ -78,10 +85,16 @@ class PictureHelper extends Helper
         return implode(', ', $links);
     }
 
+    /**
+     * @param string $format Which type of image you want
+     * @param int $width The width how the image should be output
+     * @return string
+     * @throws \Exception
+     */
     private function getImageUrl(string $format, int $width): string
     {
         switch (strtolower($format)) {
-            case "webp":
+            case 'webp':
                 return $this->image->toWebp()->scaleWidth($width)->getPath();
             default:
                 return $this->image->toJpg()->scaleWidth($width)->getPath();

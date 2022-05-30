@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Assets\Model\Entity;
 
 use Assets\Enum\ImageSizes;
+use Assets\Error\FileNotFoundException;
+use Assets\Error\InvalidAssetTypeException;
 use Assets\Utilities\ImageAsset;
 use Cake\Core\Configure;
 use Cake\ORM\Entity;
@@ -58,36 +60,54 @@ class Asset extends Entity
      * $this->filename will be an invalid Laminas\Diactoros\UploadedFile.
      *
      * Therefore, this function checks if the field is a string to get a valid response.
+     *
+     * @return bool
      */
     public function exists(): bool
     {
         return is_string($this->filename) && file_exists($this->absolute_path);
     }
 
+    /**
+     * @return string
+     */
     protected function _getAbsolutePath(): string
     {
         return ROOT . DS . $this->directory . DS . $this->filename;
     }
 
+    /**
+     * @return string
+     * @throws \Assets\Error\FileNotFoundException
+     */
     public function read(): string
     {
         if (!$this->exists()) {
-            throw new \Exception("The File {$this->filename} for the Asset #{$this->id} does not exist in {$this->directory}.");
+            throw new FileNotFoundException("The File {$this->filename} for the Asset #{$this->id} does not exist in {$this->directory}.");
         }
 
         return FileSystem::read($this->absolute_path);
     }
 
+    /**
+     * @return string
+     */
     protected function _getPublicFilename(): string
     {
         return $this->title ? Strings::webalize($this->title) . '.' . $this->filetype : $this->filename;
     }
 
+    /**
+     * @return string|null
+     */
     protected function _getFiletype(): ?string
     {
         return Strings::after($this->filename, '.', -1);
     }
 
+    /**
+     * @return bool
+     */
     public function isViewableInBrowser(): bool
     {
         return Arrays::contains([
@@ -100,6 +120,9 @@ class Asset extends Entity
             ], Strings::after($this->mimetype, '/'));
     }
 
+    /**
+     * @return bool
+     */
     public function isImage(): bool
     {
         return $this->exists()
@@ -107,25 +130,38 @@ class Asset extends Entity
             && !Strings::contains((string)Strings::after($this->mimetype, '/'), 'svg');
     }
 
+    /**
+     * @return bool
+     */
     public function isPlainText(): bool
     {
         return $this->exists()
             && Strings::before($this->mimetype, '/') === 'text';
     }
 
+    /**
+     * @param int $quality Image quality between 0 - 100
+     * @return \Assets\Utilities\ImageAsset
+     * @throws \Assets\Error\InvalidAssetTypeException
+     */
     public function getImage(int $quality = 90): ImageAsset
     {
         if (!$this->isImage()) {
-            throw new \Exception("Cannot call Asset::getImage() on #{$this->id} with MimeType {$this->mimetype}.");
+            throw new InvalidAssetTypeException("Cannot call Asset::getImage() on #{$this->id} with MimeType {$this->mimetype}.");
         }
 
         return new ImageAsset($this, $quality);
     }
 
+    /**
+     * @param int $size The size of the image
+     * @param bool $html True if HTML, false if the path should be returned
+     * @return string|null
+     */
     public function getThumbnail(int $size = ImageSizes::THMB, bool $html = true): ?string
     {
         if (!$this->exists()) {
-            return __d('assets', "File not found. ");
+            return __d('assets', 'File not found. ');
         }
 
         if ($this->isImage()) {
@@ -133,20 +169,25 @@ class Asset extends Entity
                 $thumbnail = $this->getImage(65)->scaleWidth($size)->setCSS('asset-thumbnail')->toJpg();
 
                 return $html ? $thumbnail->getHTML() : $thumbnail->getPath();
-
             } catch (\Exception $e) {
-                return __d('assets', "Cannot get ImageAsset. ");
+                return __d('assets', 'Cannot get ImageAsset. ');
             }
         }
 
         return null;
     }
 
+    /**
+     * @return string
+     */
     protected function _getFullTitle(): string
     {
         return $this->title . ' (' . $this->mimetype . ')';
     }
 
+    /**
+     * @return string
+     */
     public function getFileSizeInfo(): string
     {
         $filesize = (int)$this->filesize;
@@ -164,13 +205,17 @@ class Asset extends Entity
     }
 
     /**
-     * @throws \League\Csv\InvalidArgument
+     * @param array $options CSV options
+     * @return \League\Csv\Reader
      * @throws \League\Csv\Exception
+     * @throws \League\Csv\InvalidArgument
+     * @throws \Assets\Error\InvalidAssetTypeException
+     * @throws \Exception
      */
     public function getCsvReader(array $options = []): Reader
     {
         if ($this->filetype !== 'csv') {
-            throw new \Exception("The Asset {$this->title} is not a csv.");
+            throw new InvalidAssetTypeException("The Asset {$this->title} is not a csv.");
         }
 
         $reader = Reader::createFromString($this->read());
@@ -180,6 +225,10 @@ class Asset extends Entity
         return $reader;
     }
 
+    /**
+     * @param bool $force_download True to force the user to download the file when link is clicked
+     * @return string
+     */
     public function getDownloadLink(bool $force_download = false): string
     {
         $download = $this->isViewableInBrowser() ? '0' : '1';
@@ -202,15 +251,18 @@ class Asset extends Entity
     /**
      * Move the file to a folder in webroot
      *
-     * $path: set path from webroot where the copy will be available
-     * $filename: set the new filename. Default will be the Asset's id (uuid)
-     *
      * $config:
      * - no_prefix:
      *  If not set to true, a prefix will be prepended to the filename depending on the modification date.
      *  If set to true, new Versions will not be detected. You will have to change the filename accordingly, or empty the folder set in $path.
+     *
+     * @param string|null $filename Name of the file. Default will be the Asset's id (uuid)
+     * @param string|null $path Path from webroot where the copy will be available
+     * @param array $config See above
+     * @return string
+     * @throws \Assets\Error\FileNotFoundException
      */
-    public function moveToWebroot(?string $filename = null, ?string $path = "files", array $config = []): string
+    public function moveToWebroot(?string $filename = null, ?string $path = 'files', array $config = []): string
     {
         $default_config = [
             'no_prefix' => false,
@@ -237,7 +289,7 @@ class Asset extends Entity
         }
 
         if (!$this->exists()) {
-            throw new \Exception("The file for Asset #{$this->id} does not exist. ");
+            throw new FileNotFoundException("The file for Asset #{$this->id} does not exist. ");
         }
 
         FileSystem::copy($this->absolute_path, $full_path);

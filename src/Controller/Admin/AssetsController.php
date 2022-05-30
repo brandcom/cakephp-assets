@@ -51,8 +51,8 @@ class AssetsController extends AppController
     public function add()
     {
         $asset = $this->Assets->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $asset = $this->Assets->patchEntity($asset, $this->request->getData());
+        if ($this->getRequest()->is('post')) {
+            $asset = $this->Assets->patchEntity($asset, $this->getRequest()->getData());
             if ($this->Assets->save($asset)) {
                 $this->Flash->success(__('The asset has been saved.'));
 
@@ -75,8 +75,8 @@ class AssetsController extends AppController
         $asset = $this->Assets->get($id, [
             'contain' => [],
         ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $asset = $this->Assets->patchEntity($asset, $this->request->getData());
+        if ($this->getRequest()->is(['patch', 'post', 'put'])) {
+            $asset = $this->Assets->patchEntity($asset, $this->getRequest()->getData());
             if ($this->Assets->save($asset)) {
                 $this->Flash->success(__('The asset has been saved.'));
 
@@ -96,7 +96,7 @@ class AssetsController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
+        $this->getRequest()->allowMethod(['post', 'delete']);
         $asset = $this->Assets->get($id);
         if ($this->Assets->delete($asset)) {
             $this->Flash->success(__('The asset has been deleted.'));
@@ -109,6 +109,9 @@ class AssetsController extends AppController
 
     /**
      * Add ?download=1 to URL to download instead of view the file.
+     *
+     * @param string $id The ID of the asset
+     * @return \Cake\Http\Response
      */
     public function download(string $id): Response
     {
@@ -119,7 +122,7 @@ class AssetsController extends AppController
             return $asset->read();
         });
 
-        $response = $this->response
+        $response = $this->getResponse()
             ->withType($asset->mimetype)
             ->withDisabledCache()
             ->withBody($stream);

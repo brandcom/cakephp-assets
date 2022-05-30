@@ -1,14 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace Assets\Enum;
 
 class ImageSizes
 {
-    const THMB = 75;
-    const SM = 120;
-    const MD = 230;
-    const LG = 520;
-    const XL = 750;
-    const XXL = 1250;
-    const HD = 1920;
+    public const THMB = 75;
+    public const SM = 120;
+    public const MD = 230;
+    public const LG = 520;
+    public const XL = 750;
+    public const XXL = 1250;
+    public const HD = 1920;
 }
