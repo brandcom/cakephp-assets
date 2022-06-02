@@ -16,7 +16,7 @@ class BelongsToAssetsBehavior extends Behavior
     /**
      * Default configuration.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [];
 

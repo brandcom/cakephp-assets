@@ -79,7 +79,8 @@ class ImageAsset
      * @param array $options - optional:
      * - title (string): for alt-parameter in html-output
      * - quality (int): for jpg compression
-     * @return $this
+     * @throws \Exception
+     * @return \Assets\Utilities\ImageAsset
      */
     public static function createFromPath(string $path, array $options = [])
     {
@@ -101,7 +102,7 @@ class ImageAsset
         $asset->id = md5($path);
         $asset->filename = $splFileInfo->getFilename();
         $asset->directory = ltrim(str_replace(ROOT, '', $splFileInfo->getPath()), DS);
-        $asset->mimetype = mime_content_type($absolute_path);
+        $asset->mimetype = mime_content_type($absolute_path) ?: 'unknown';
         $asset->title = $options['title'] ?? null;
         $asset->description = null;
         $asset->modified = FrozenTime::createFromTimestamp($splFileInfo->getMTime());
