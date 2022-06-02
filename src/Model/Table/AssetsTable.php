@@ -133,7 +133,7 @@ class AssetsTable extends Table
      */
     public static function getAssetsDir(): string
     {
-        return Configure::read('AssetsPlugin.AssetsTable.assetsDir', "resources" . DS . "assets" . DS);
+        return Configure::read('AssetsPlugin.AssetsTable.assetsDir', 'resources' . DS . 'assets' . DS);
     }
 
     /**

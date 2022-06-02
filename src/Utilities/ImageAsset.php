@@ -64,8 +64,10 @@ class ImageAsset
         $this->filename = null;
         $this->lazyLoading = true;
         $this->css = 'image-asset';
-        $this->outputDirectory = Configure::read('AssetsPlugin.ImageAsset.outDir',
-            DS . Configure::read('App.imageBaseUrl') . 'modified' . DS);
+        $this->outputDirectory = Configure::read(
+            'AssetsPlugin.ImageAsset.outDir',
+            DS . Configure::read('App.imageBaseUrl') . 'modified' . DS
+        );
 
         $this->trackModification('constructor', ['quality' => $quality], true);
     }
@@ -77,12 +79,12 @@ class ImageAsset
      * @param array $options - optional:
      * - title (string): for alt-parameter in html-output
      * - quality (int): for jpg compression
-     * @return ImageAsset
+     * @return \Assets\Utilities\ImageAsset
      */
     public static function createFromPath(string $path, array $options = []): ImageAsset
     {
         $absolute_path = null;
-        $img_dir = WWW_ROOT . Configure::read("App.imageBaseUrl");
+        $img_dir = WWW_ROOT . Configure::read('App.imageBaseUrl');
         if (file_exists($path)) {
             $absolute_path = $path;
         } elseif (file_exists($img_dir . $path)) {
@@ -175,10 +177,14 @@ class ImageAsset
      *
      * Note: This will override the automatically generated name based on the file's modifications. You should
      * provide a unique name for each modified version.
+     *
+     * @param string|null $filename the custom filename
+     * @return $this
      */
     public function setFilename(?string $filename): ImageAsset
     {
         $this->filename = $filename;
+
         return $this;
     }
 
