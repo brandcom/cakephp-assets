@@ -79,9 +79,9 @@ class ImageAsset
      * @param array $options - optional:
      * - title (string): for alt-parameter in html-output
      * - quality (int): for jpg compression
-     * @return \Assets\Utilities\ImageAsset
+     * @return $this
      */
-    public static function createFromPath(string $path, array $options = []): ImageAsset
+    public static function createFromPath(string $path, array $options = [])
     {
         $absolute_path = null;
         $img_dir = WWW_ROOT . Configure::read('App.imageBaseUrl');
@@ -181,7 +181,7 @@ class ImageAsset
      * @param string|null $filename the custom filename
      * @return $this
      */
-    public function setFilename(?string $filename): ImageAsset
+    public function setFilename(?string $filename)
     {
         $this->filename = $filename;
 

@@ -254,11 +254,9 @@ class Asset extends Entity
     }
 
     /**
+     * Will be removed due to naming inconsistency. Files are actually copied and not movedd. Use Asset::copyToWebroot instead.
+     *
      * @deprecated
-     * use Asset::copyToWebroot
-     *
-     * Will be removed due to naming inconsistency. Files are actually copied and not moved.
-     *
      * @param string|null $filename Name of the file. Default will be the Asset's id (uuid)
      * @param string|null $path Path from webroot where the copy will be available
      * @param array $config See above
