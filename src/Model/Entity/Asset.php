@@ -254,7 +254,24 @@ class Asset extends Entity
     }
 
     /**
-     * Move the file to a folder in webroot
+     * @deprecated
+     * use Asset::copyToWebroot
+     *
+     * Will be removed due to naming inconsistency. Files are actually copied and not moved.
+     *
+     * @param string|null $filename Name of the file. Default will be the Asset's id (uuid)
+     * @param string|null $path Path from webroot where the copy will be available
+     * @param array $config See above
+     * @return string
+     * @throws \Assets\Error\FileNotFoundException
+     */
+    public function moveToWebroot(?string $filename = null, ?string $path = 'files', array $config = []): string
+    {
+        return $this->copyToWebroot($filename, $path, $config);
+    }
+
+    /**
+     * Copy the file to a folder in webroot
      *
      * $config:
      * - no_prefix:
@@ -267,7 +284,7 @@ class Asset extends Entity
      * @return string
      * @throws \Assets\Error\FileNotFoundException
      */
-    public function moveToWebroot(?string $filename = null, ?string $path = 'files', array $config = []): string
+    public function copyToWebroot(?string $filename = null, ?string $path = 'files', array $config = []): string
     {
         $default_config = [
             'no_prefix' => false,
