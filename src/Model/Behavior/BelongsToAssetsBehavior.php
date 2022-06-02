@@ -7,7 +7,6 @@ use Assets\Model\Entity\Asset;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
-use Laminas\Diactoros\UploadedFile;
 
 /**
  * BelongsToAssets behavior
@@ -21,13 +20,23 @@ class BelongsToAssetsBehavior extends Behavior
      */
     protected $_defaultConfig = [];
 
-    public function beforeSave(EventInterface $event, EntityInterface $entity, $options): bool
+    /**
+     * @param \Cake\Event\EventInterface $event The beforeSave event
+     * @param \Cake\Datasource\EntityInterface $entity The entity related to the event
+     * @param \ArrayObject $options Options passed to the event
+     * @return bool
+     */
+    public function beforeSave(EventInterface $event, EntityInterface $entity, \ArrayObject $options): bool
     {
         $this->handleEmptyAssets($entity);
 
         return true;
     }
 
+    /**
+     * @param \Cake\Datasource\EntityInterface $entity The entity
+     * @return void
+     */
     private function handleEmptyAssets(EntityInterface $entity)
     {
         foreach ($entity->toArray() as $key => $item) {
@@ -36,7 +45,7 @@ class BelongsToAssetsBehavior extends Behavior
             }
 
             /**
-             * @var UploadedFile $file
+             * @var \Laminas\Diactoros\UploadedFile $file
              */
             $file = $item['filename'];
             if (!$file->getClientFilename()) {

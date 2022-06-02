@@ -8,7 +8,6 @@ use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Laminas\Diactoros\UploadedFile;
@@ -29,7 +28,6 @@ use Laminas\Diactoros\UploadedFile;
  * @method \Assets\Model\Entity\Asset[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \Assets\Model\Entity\Asset[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \Assets\Model\Entity\Asset[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
- *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AssetsTable extends Table
@@ -52,8 +50,7 @@ class AssetsTable extends Table
 
         $this->addBehavior('Josegonzalez/Upload.Upload', [
             'filename' => [
-                'nameCallback' => function ($table, EntityInterface $entity, UploadedFile $data, $field, $settings
-                ): string {
+                'nameCallback' => function ($table, EntityInterface $entity, UploadedFile $data, $field, $settings): string {
 
                     if (method_exists($this, 'fileNameCallback')) {
                         return $this->fileNameCallback($table, $entity, $data, $field, $settings);
@@ -120,11 +117,20 @@ class AssetsTable extends Table
         return $validator;
     }
 
-    public function beforeFind(EventInterface $e, Query $query, \ArrayObject $options, $primary)
+    /**
+     * @param \Cake\Event\EventInterface $e The event
+     * @param \Cake\ORM\Query $query The query associated to the event
+     * @param \ArrayObject $options Options passed to the event
+     * @return \Cake\ORM\Query
+     */
+    public function beforeFind(EventInterface $e, Query $query, \ArrayObject $options)
     {
         return $query->orderDesc('modified');
     }
 
+    /**
+     * @return string
+     */
     public static function getAssetsDir(): string
     {
         return Configure::read('AssetsPlugin.AssetsTable.assetsDir', "resources" . DS . "assets" . DS);
@@ -137,8 +143,10 @@ class AssetsTable extends Table
      * See AssetsTable::initialize()
      *
      * You can also define methods like beforeFind() or afterSave()
+     *
      * @link https://book.cakephp.org/4/en/orm/table-objects.html#lifecycle-callbacks
      * @link https://book.cakephp.org/4/en/orm/behaviors.html
+     * @return void
      */
     private function addCustomBehaviors()
     {
