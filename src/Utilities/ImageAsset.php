@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Assets\Utilities;
 
+use App\View\AppView;
 use Assets\Error\FileNotFoundException;
 use Assets\Error\FilterNotFoundException;
 use Assets\Error\UnkownErrorException;
 use Assets\Model\Entity\Asset;
-use Assets\View\AppView;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\View\Helper\HtmlHelper;
@@ -337,7 +337,7 @@ class ImageAsset
             return $this->outputDirectory . $this->getFilename() . '.' . $format;
         }
 
-        throw new FileNotFoundException('Cannot get Path for an Image that does not yet exist. 
+        throw new FileNotFoundException('Cannot get Path for an Image that does not yet exist.
             The render() method must be called before getRelativePath(). ');
     }
 

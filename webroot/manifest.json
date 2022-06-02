@@ -1,0 +1,20 @@
+{
+  "webroot_src/main-legacy.ts": {
+    "file": "build/main-legacy.92fe5b14.js",
+    "src": "webroot_src/main-legacy.ts",
+    "isEntry": true
+  },
+  "vite/legacy-polyfills": {
+    "file": "build/polyfills-legacy.10107c21.js",
+    "src": "vite/legacy-polyfills",
+    "isEntry": true
+  },
+  "webroot_src/main.ts": {
+    "file": "build/main.34da3cf3.js",
+    "src": "webroot_src/main.ts",
+    "isEntry": true,
+    "css": [
+      "build/main.511d3412.css"
+    ]
+  }
+}

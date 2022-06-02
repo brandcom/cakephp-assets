@@ -23,5 +23,6 @@ class Plugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         $app->addPlugin('Josegonzalez/Upload');
+        $app->addPlugin('ViteHelper');
     }
 }
