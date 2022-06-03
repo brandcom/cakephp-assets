@@ -1,5 +1,5 @@
 <template>
-    <div class="upload-field border rounded flex gap-3 my-4">
+    <div class="upload-field relative z-20 border rounded flex gap-3 my-4">
         <div class="current-asset p-2">
             <a
                 :href="currentAsset.downloadLink"
@@ -21,6 +21,7 @@
         <button
             type="button"
             class="h-full p-2 px-6 border-none rounded-none transition-color hover:bg-neutral-200"
+            @click="toggleFilepool"
         >
             {{ i18n.chooseExisting }}
         </button>
@@ -56,11 +57,29 @@
             :value="currentAsset.id"
         >
     </div>
+    <section
+        class="filepool-popup fixed z-50 inset-0 w-screen h-screen flex items-center justify-center"
+        v-if="showFilepool"
+    >
+        <button
+            class="filepool-popup-close absolute z-10 inset-0 w-full h-full bg-black opacity-40"
+            @click="toggleFilepool"
+        />
+        <div class="filepool-popup-content relative z-50 border bg-white p-4 w-full lg:max-w-screen-md max-h-screen overflow-y-auto">
+            <FilePool />
+        </div>
+    </section>
 </template>
 
 <script>
+
+import FilePool from '../file-pool/FilePool.vue';
+
 export default {
     name: 'UploadField',
+    components: {
+        FilePool
+    },
     props: {
         fileInfo: {
             required: true,
@@ -77,6 +96,7 @@ export default {
     },
     data() {
         return {
+            showFilepool: false,
             originalFields: {
                 file: {
                     name: null,
@@ -155,6 +175,9 @@ export default {
         emptyCurrentAsset() {
             this.currentAsset.id = null;
         },
+        toggleFilepool() {
+            this.showFilepool = !this.showFilepool;
+        }
     },
     mounted() {
         this.setOriginalFields();

@@ -1,6 +1,6 @@
 {
   "webroot_src/main-legacy.ts": {
-    "file": "build/main-legacy.898fc177.js",
+    "file": "build/main-legacy.7ec72774.js",
     "src": "webroot_src/main-legacy.ts",
     "isEntry": true,
     "dynamicImports": [
@@ -8,7 +8,7 @@
     ]
   },
   "webroot_src/components/upload-field/initUploadField-legacy.ts": {
-    "file": "build/initUploadField-legacy.324f84f1.js",
+    "file": "build/initUploadField-legacy.77a84980.js",
     "src": "webroot_src/components/upload-field/initUploadField-legacy.ts",
     "isDynamicEntry": true
   },
@@ -18,18 +18,18 @@
     "isEntry": true
   },
   "webroot_src/main.ts": {
-    "file": "build/main.fb0148ca.js",
+    "file": "build/main.63ad3a11.js",
     "src": "webroot_src/main.ts",
     "isEntry": true,
     "dynamicImports": [
       "webroot_src/components/upload-field/initUploadField.ts"
     ],
     "css": [
-      "build/main.d67e6ba4.css"
+      "build/main.c7283a4f.css"
     ]
   },
   "webroot_src/components/upload-field/initUploadField.ts": {
-    "file": "build/initUploadField.1c19f9b3.js",
+    "file": "build/initUploadField.7e58a29c.js",
     "src": "webroot_src/components/upload-field/initUploadField.ts",
     "isDynamicEntry": true
   }
