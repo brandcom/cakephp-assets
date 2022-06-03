@@ -4,7 +4,7 @@ uploadImports();
 
 async function uploadImports()
 {
-    if (!document.querySelector('.js-assets-upload-wrapper')) {
+    if (!document.querySelector('[data-vue-upload-field]')) {
         return;
     }
 

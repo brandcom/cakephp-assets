@@ -77,48 +77,11 @@ class AssetFormHelper extends Helper
         $associationName = $this->getAssociationName($fieldName);
         $this->setAsset($associationName);
 
-        $template = '';
-        $existingAssetId = null;
-
-        $template .= $this->getPreview();
-
-        $template .= $this->Form->control(sprintf('%s.filename', $associationName), [
-            'type' => 'file',
-            'label' => __d('assets', 'Choose file'),
-            'class' => 'js-assets-upload-field',
-            'data-context' => json_encode([
-                'entityId' => $this->context->id,
-                'entityModel' => $this->context->getSource(),
-                'associationName' => $associationName,
-            ]),
-            'required' => false,
+        return $this->getView()->element('Assets.Helper/AssetForm/upload-field', [
+            'associationName' => $this->getAssociationName($fieldName),
+            'context' => $this->context,
+            'asset' => $this->asset,
         ]);
-
-        $asset = $this->context->get($associationName);
-        if ($asset && is_a($asset, Asset::class)) {
-            $existingAssetId = $asset->id ?: null;
-        }
-        $template .= $this->Form->control(sprintf('%s_id', $associationName), [
-            'value' => $existingAssetId,
-            'type' => 'text',
-            'label' => false,
-            'class' => 'js-assets-existing-file',
-            'required' => false,
-        ]);
-
-        $template .= $this->Html->div(
-            'js-assets-upload-choose-existing-button',
-            $this->Form->button(__d('assets', 'Choose existing file'), ['type' => 'button']),
-            ['escape' => false]
-        );
-
-        $template .= $this->Html->div(
-            'js-assets-upload-select-new-button',
-            $this->Form->button(__d('assets', 'Select new file'), ['type' => 'button']),
-            ['escape' => false]
-        );
-
-        return $this->Html->div('js-assets-upload-wrapper', $template, ['escape' => false]);
     }
 
     private function getAssociationName(string $fieldName): string
@@ -180,25 +143,5 @@ class AssetFormHelper extends Helper
         }
 
         $this->asset = null;
-    }
-
-    private function getPreview(): ?string
-    {
-        $template = '';
-
-        if (!$this->asset) {
-
-            return $this->Html->div('js-assets-preview', __d('assets', 'No file selected'), ['escape' => false]);
-        }
-
-        if ($this->asset->getThumbnail()) {
-            $template .= $this->Html->div('js-assets-preview__image', $this->asset->getThumbnail(),
-                ['escape' => false]);
-        }
-
-        $template .= $this->Html->div('js-assets-preview__fileinfo',
-            sprintf('%s, %s', $this->asset->filetype, $this->asset->getFileSizeInfo()));
-
-        return $this->Html->div('js-assets-preview', $template, ['escape' => false]);
     }
 }

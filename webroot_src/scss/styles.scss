@@ -1,46 +1,10 @@
-.js-assets-upload-wrapper {
-    position: relative;
-    z-index: 10;
-    background-color: #fff;
-    margin: 1rem 0;
-    border: 1px solid #ccc;
-    padding: 1rem;
-    border-radius: 4px;
-    min-height: 5rem;
-    transition: background-color 0.2s ease-out;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-
-    &:hover {
-        border-color: #333;
-        background-color: #fafafa;
-    }
-
-    .input.file > label {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        z-index: 10;
-        cursor: pointer;
-    }
-
-    .js-assets-upload-field,
-    .js-assets-existing-file {
-        position: absolute;
-        width: 0;
-        height: 0;
-        left: -5000px;
-        opacity: 0;
-        pointer-events: none;
-        z-index: -500;
-    }
-
-    .js-assets-upload-choose-existing-button {
-        position: relative;
-        z-index: 50;
-    }
+.assets-upload__original-fields {
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -5000px;
+    top: -5000px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: -500;
 }
-

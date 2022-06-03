@@ -1,6 +1,6 @@
 {
   "webroot_src/main-legacy.ts": {
-    "file": "build/main-legacy.8ef15f3d.js",
+    "file": "build/main-legacy.9f5e865a.js",
     "src": "webroot_src/main-legacy.ts",
     "isEntry": true,
     "dynamicImports": [
@@ -8,28 +8,28 @@
     ]
   },
   "webroot_src/components/upload-field/initUploadField-legacy.ts": {
-    "file": "build/initUploadField-legacy.70428908.js",
+    "file": "build/initUploadField-legacy.0ff5f5c6.js",
     "src": "webroot_src/components/upload-field/initUploadField-legacy.ts",
     "isDynamicEntry": true
   },
   "vite/legacy-polyfills": {
-    "file": "build/polyfills-legacy.3a0039a9.js",
+    "file": "build/polyfills-legacy.57b7278a.js",
     "src": "vite/legacy-polyfills",
     "isEntry": true
   },
   "webroot_src/main.ts": {
-    "file": "build/main.199e4208.js",
+    "file": "build/main.328ecd48.js",
     "src": "webroot_src/main.ts",
     "isEntry": true,
     "dynamicImports": [
       "webroot_src/components/upload-field/initUploadField.ts"
     ],
     "css": [
-      "build/main.b787f547.css"
+      "build/main.cf833225.css"
     ]
   },
   "webroot_src/components/upload-field/initUploadField.ts": {
-    "file": "build/initUploadField.8cda9473.js",
+    "file": "build/initUploadField.c4a6e041.js",
     "src": "webroot_src/components/upload-field/initUploadField.ts",
     "isDynamicEntry": true
   }
