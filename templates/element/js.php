@@ -2,13 +2,10 @@
 /**
  * @var \App\View\AppView $this
  */
+
+if (!$this->helpers()->has('ViteScripts')) {
+    $this->ViteScripts = $this->loadHelper('ViteHelper.ViteScripts', \Assets\Utilities\ViteScripts::getViteConfig());
+}
 ?>
-<?php foreach (\Assets\Utilities\ViteScripts::js() as $path): ?>
-    <?php
-    $legacy = \Nette\Utils\Strings::contains($path, 'legacy');
-    ?>
-    <?= $this->Html->script($path, [
-        'type' => $legacy ? 'false' : 'module',
-        'nomodule' => $legacy ? 'nomodule' : false,
-    ]) ?>
-<?php endforeach; ?>
+
+<?= $this->ViteScripts->body(['plugin' => 'Assets']) ?>
