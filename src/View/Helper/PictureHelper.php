@@ -18,7 +18,7 @@ class PictureHelper extends Helper
     /**
      * Default configuration.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [];
 
@@ -106,10 +106,10 @@ class PictureHelper extends Helper
      * @param string $format Which type of image you want
      * @param array $widths Array of image widths you desire to have in the SrcSet
      * @param array $options - passed to PictureHelper::getImageUrl
-     * @return string|null
+     * @return string
      * @throws \Assets\Error\InvalidArgumentException
      */
-    private function getSrcSet(string $format, array $widths, array $options = []): ?string
+    private function getSrcSet(string $format, array $widths, array $options = []): string
     {
         $links = [];
 
