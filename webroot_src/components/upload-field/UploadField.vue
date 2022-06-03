@@ -1,12 +1,11 @@
 <template>
     Upload Field!
+    <p>
+        Test
+    </p>
 </template>
 
 <script>
-/**
- * FIXME component-style does not work  - 404 error as the /assets part in the URL is missing.
- */
-
 export default {
     name: 'UploadField',
     props: {
@@ -27,3 +26,8 @@ export default {
     }
 };
 </script>
+<style lang="scss" scoped>
+p {
+    @apply text-red-500;
+}
+</style>
