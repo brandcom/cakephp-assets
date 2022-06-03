@@ -106,6 +106,18 @@ class AssetFormHelper extends Helper
             'required' => false,
         ]);
 
+        $template .= $this->Html->div(
+            'js-assets-upload-choose-existing-button',
+            $this->Form->button(__d('assets', 'Choose existing file'), ['type' => 'button']),
+            ['escape' => false]
+        );
+
+        $template .= $this->Html->div(
+            'js-assets-upload-select-new-button',
+            $this->Form->button(__d('assets', 'Select new file'), ['type' => 'button']),
+            ['escape' => false]
+        );
+
         return $this->Html->div('js-assets-upload-wrapper', $template, ['escape' => false]);
     }
 
@@ -180,10 +192,12 @@ class AssetFormHelper extends Helper
         }
 
         if ($this->asset->getThumbnail()) {
-            $template .= $this->Html->div('js-assets-preview__image', $this->asset->getThumbnail(), ['escape' => false]);
+            $template .= $this->Html->div('js-assets-preview__image', $this->asset->getThumbnail(),
+                ['escape' => false]);
         }
 
-        $template .= $this->Html->div('js-assets-preview__fileinfo', sprintf('%s, %s', $this->asset->filetype, $this->asset->getFileSizeInfo()));
+        $template .= $this->Html->div('js-assets-preview__fileinfo',
+            sprintf('%s, %s', $this->asset->filetype, $this->asset->getFileSizeInfo()));
 
         return $this->Html->div('js-assets-preview', $template, ['escape' => false]);
     }

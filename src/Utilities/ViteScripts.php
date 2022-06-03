@@ -7,7 +7,7 @@ class ViteScripts
     public static function getViteConfig(): array
     {
         return [
-            'forceProductionMode' => false,
+            'forceProductionMode' => true,
             'devHostNeedles' => [
                 '.test',
                 'localhost',

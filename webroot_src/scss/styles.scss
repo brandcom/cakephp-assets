@@ -1,5 +1,6 @@
 .js-assets-upload-wrapper {
     position: relative;
+    z-index: 10;
     background-color: #fff;
     margin: 1rem 0;
     border: 1px solid #ccc;
@@ -7,6 +8,9 @@
     border-radius: 4px;
     min-height: 5rem;
     transition: background-color 0.2s ease-out;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
 
     &:hover {
         border-color: #333;
@@ -19,6 +23,7 @@
         width: 100%;
         height: 100%;
         opacity: 0;
+        z-index: 10;
         cursor: pointer;
     }
 
@@ -31,6 +36,11 @@
         opacity: 0;
         pointer-events: none;
         z-index: -500;
+    }
+
+    .js-assets-upload-choose-existing-button {
+        position: relative;
+        z-index: 50;
     }
 }
 
