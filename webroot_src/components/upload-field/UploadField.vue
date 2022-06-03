@@ -3,6 +3,10 @@
 </template>
 
 <script>
+/**
+ * FIXME component-style does not work  - 404 error as the /assets part in the URL is missing.
+ */
+
 export default {
     name: 'UploadField',
     props: {
@@ -23,7 +27,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-
-</style>
