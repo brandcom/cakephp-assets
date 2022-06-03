@@ -22,12 +22,21 @@ if ($asset) {
         'downloadLink' => $asset->getDownloadLink(),
     ];
 }
+
+$i18n = [
+    'uploadNew' => __d('assets', 'Upload new'),
+    'chooseExisting' => __d('assets', 'Choose existing'),
+];
+
 ?>
 <div data-vue-upload-field>
     <div class="vue-json" title="file-info" style="display: none;">
         <?= json_encode($fileInfo, JSON_HEX_QUOT | JSON_HEX_TAG) ?>
     </div>
-    <div class="vue-html" title="original-fields">
+    <div class="vue-json" title="i18n" style="display: none;">
+        <?= json_encode($i18n, JSON_HEX_QUOT | JSON_HEX_TAG) ?>
+    </div>
+    <div class="vue-html" title="original-fields-template">
         <?= $this->Form->control(sprintf('%s.filename', $associationName), [
             'type' => 'file',
             'label' => __d('assets', 'Choose file'),
@@ -35,7 +44,7 @@ if ($asset) {
             'required' => false,
         ]) ?>
         <?= $this->Form->control(sprintf('%s_id', $associationName), [
-            'value' => $context->get($associationName) ? $context->get($associationName)->get('id') : false,
+            'value' => $context->get($associationName) ? $context->get($associationName)->get('id') : '',
             'type' => 'text',
             'label' => false,
             'class' => 'js-assets-existing-file',

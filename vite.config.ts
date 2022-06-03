@@ -2,6 +2,9 @@ import { defineConfig } from 'vite';
 import legacy from '@vitejs/plugin-legacy';
 import vue from '@vitejs/plugin-vue';
 
+/**
+ * FIXME dev server not working yet...
+ */
 export default defineConfig({
     plugins: [
         legacy({
@@ -25,5 +28,8 @@ export default defineConfig({
             port: 3000,
         },
     },
+    /**
+     * e.g. for css files from asyncronously loaded modules
+     */
     base: '/assets/',
 });

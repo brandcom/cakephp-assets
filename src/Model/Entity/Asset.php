@@ -113,6 +113,10 @@ class Asset extends Entity
      */
     public function isViewableInBrowser(): bool
     {
+        if (!$this->get('id')) {
+            return false;
+        }
+
         return Arrays::contains([
                 'image',
                 'video',
