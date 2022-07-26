@@ -147,11 +147,16 @@ class Asset extends Entity
     /**
      * @param int $quality Image quality between 0 - 100
      * @return \Assets\Utilities\ImageAsset
+     * @throws \Assets\Error\FileNotFoundException
      * @throws \Assets\Error\InvalidAssetTypeException
      */
     public function getImage(int $quality = 90): ImageAsset
     {
         if (!$this->isImage()) {
+            if (!$this->exists()) {
+                throw new FileNotFoundException("Cannot call Asset::getImage() on #{$this->id}. The Asset's source file does not exist.");
+            }
+
             throw new InvalidAssetTypeException("Cannot call Asset::getImage() on #{$this->id} with MimeType {$this->mimetype}.");
         }
 
@@ -256,12 +261,12 @@ class Asset extends Entity
     /**
      * Will be removed due to naming inconsistency. Files are actually copied and not movedd. Use Asset::copyToWebroot instead.
      *
-     * @deprecated
      * @param string|null $filename Name of the file. Default will be the Asset's id (uuid)
      * @param string|null $path Path from webroot where the copy will be available
      * @param array $config See above
      * @return string
      * @throws \Assets\Error\FileNotFoundException
+     * @deprecated
      */
     public function moveToWebroot(?string $filename = null, ?string $path = 'files', array $config = []): string
     {
