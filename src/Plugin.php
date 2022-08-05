@@ -23,9 +23,9 @@ class Plugin extends BasePlugin
      */
     public function bootstrap(PluginApplicationInterface $app): void
     {
-		if (file_exists(ROOT . DS . 'config' . DS . 'app_assets.php')) {
-			Configure::load('app_assets');
-		}
+        if (file_exists(ROOT . DS . 'config' . DS . 'app_assets.php')) {
+            Configure::load('app_assets');
+        }
 
         $app->addPlugin('Josegonzalez/Upload');
     }
