@@ -24,7 +24,7 @@ use Nette\Utils\Strings;
  * @property string|null $category
  * @property string $filename
  * @property string $directory
- * @property string $mimetype
+ * @property string|null $mimetype
  * @property string $filesize
  * @property string $filetype
  * @property string $absolute_path
@@ -116,11 +116,11 @@ class Asset extends Entity
         return Arrays::contains([
                 'image',
                 'video',
-            ], Strings::before($this->mimetype, '/'))
+            ], Strings::before((string)$this->mimetype, '/'))
             || Arrays::contains([
                 'pdf',
                 'json',
-            ], Strings::after($this->mimetype, '/'));
+            ], Strings::after((string)$this->mimetype, '/'));
     }
 
     /**
@@ -131,7 +131,7 @@ class Asset extends Entity
     public function isImage(): bool
     {
         return $this->exists()
-            && Strings::before($this->mimetype, '/') === 'image'
+            && Strings::before((string)$this->mimetype, '/') === 'image'
             && !Strings::contains((string)Strings::after($this->mimetype, '/'), 'svg');
     }
 
