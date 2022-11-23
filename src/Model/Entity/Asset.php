@@ -171,7 +171,7 @@ class Asset extends Entity
     public function getThumbnail(int $size = ImageSizes::THMB, bool $html = true): ?string
     {
         if (!$this->exists()) {
-            return __d('assets', 'File not found. ');
+            return __d('assets', 'File not found.');
         }
 
         if ($this->isImage()) {
@@ -180,7 +180,7 @@ class Asset extends Entity
 
                 return $html ? $thumbnail->getHTML() : $thumbnail->getPath();
             } catch (\Exception $e) {
-                return __d('assets', 'Cannot get ImageAsset. ');
+                return __d('assets', 'Cannot get ImageAsset.');
             }
         }
 

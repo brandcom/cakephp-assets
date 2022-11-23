@@ -5,8 +5,8 @@
  */
 ?>
 <div class="assets index content">
-    <?= $this->Html->link(__('New Asset'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Assets') ?></h3>
+    <?= $this->Html->link(__d('assets','New Asset'), ['action' => 'add'], ['class' => 'button float-right']) ?>
+    <h3><?= __d('assets','Assets') ?></h3>
     <div class="table-responsive">
         <table>
             <thead>
@@ -23,8 +23,8 @@
                         <?= $this->Paginator->sort('created') ?> /
                         <?= $this->Paginator->sort('modified') ?>
                     </th>
-                    <th>Vorschau</th>
-                    <th class="actions"><?= __('Actions') ?></th>
+                    <th><?= __d('assets', 'Preview') ?></th>
+                    <th class="actions"><?= __d('assets','Actions') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -57,9 +57,9 @@
                         <?= $this->Html->link($asset->getThumbnail() ?: 'Öffnen', ['action' => 'download', $asset->id, '?' => ['download' => $asset->isViewableInBrowser() ? 0 : 1]], ['escape' => false]) ?>
                     </td>
                     <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $asset->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $asset->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $asset->id], ['confirm' => __('Are you sure you want to delete # {0}?', $asset->id)]) ?>
+                        <?= $this->Html->link(__d('assets','View'), ['action' => 'view', $asset->id]) ?>
+                        <?= $this->Html->link(__d('assets','Edit'), ['action' => 'edit', $asset->id]) ?>
+                        <?= $this->Form->postLink(__d('assets','Delete'), ['action' => 'delete', $asset->id], ['confirm' => __d('assets','Are you sure you want to delete # {0}?', $asset->id)]) ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -68,13 +68,13 @@
     </div>
     <div class="paginator">
         <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
+            <?= $this->Paginator->first('<< ' . __d('assets','first')) ?>
+            <?= $this->Paginator->prev('< ' . __d('assets','previous')) ?>
             <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
+            <?= $this->Paginator->next(__d('assets','next') . ' >') ?>
+            <?= $this->Paginator->last(__d('assets','last') . ' >>') ?>
         </ul>
         <p><?= $this->Paginator->limitControl() ?></p>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
+        <p><?= $this->Paginator->counter(__d('assets','Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
     </div>
 </div>
