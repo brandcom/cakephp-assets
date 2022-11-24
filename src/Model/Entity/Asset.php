@@ -41,7 +41,7 @@ class Asset extends Entity
      * be mass assigned. For security purposes, it is advised to set '*' to false
      * (or remove it), and explicitly make individual fields accessible as needed.
      *
-     * @var array<string, bool>
+     * @var array<array-key, bool>
      */
     protected $_accessible = [
         'title' => true,
@@ -65,7 +65,7 @@ class Asset extends Entity
      */
     public function exists(): bool
     {
-        return is_string($this->filename) && file_exists($this->absolute_path);
+        return file_exists($this->absolute_path);
     }
 
     /**
@@ -131,8 +131,8 @@ class Asset extends Entity
     public function isImage(): bool
     {
         return $this->exists()
-            && Strings::before((string)$this->mimetype, '/') === 'image'
-            && !Strings::contains((string)Strings::after($this->mimetype, '/'), 'svg');
+            && Strings::before($this->mimetype ?? '', '/') === 'image'
+            && !Strings::contains((string)Strings::after($this->mimetype ?? '', '/'), 'svg');
     }
 
     /**
@@ -141,7 +141,7 @@ class Asset extends Entity
     public function isPlainText(): bool
     {
         return $this->exists()
-            && Strings::before($this->mimetype, '/') === 'text';
+            && Strings::before($this->mimetype ?? '', '/') === 'text';
     }
 
     /**
@@ -262,13 +262,13 @@ class Asset extends Entity
      * Will be removed due to naming inconsistency. Files are actually copied and not movedd. Use Asset::copyToWebroot instead.
      *
      * @param string|null $filename Name of the file. Default will be the Asset's id (uuid)
-     * @param string|null $path Path from webroot where the copy will be available
+     * @param string $path Path from webroot where the copy will be available
      * @param array $config See above
      * @return string
      * @throws \Assets\Error\FileNotFoundException
      * @deprecated
      */
-    public function moveToWebroot(?string $filename = null, ?string $path = 'files', array $config = []): string
+    public function moveToWebroot(?string $filename = null, string $path = 'files', array $config = []): string
     {
         return $this->copyToWebroot($filename, $path, $config);
     }
@@ -282,12 +282,12 @@ class Asset extends Entity
      *  If set to true, new Versions will not be detected. You will have to change the filename accordingly, or empty the folder set in $path.
      *
      * @param string|null $filename Name of the file. Default will be the Asset's id (uuid)
-     * @param string|null $path Path from webroot where the copy will be available
+     * @param string $path Path from webroot where the copy will be available
      * @param array $config See above
      * @return string
      * @throws \Assets\Error\FileNotFoundException
      */
-    public function copyToWebroot(?string $filename = null, ?string $path = 'files', array $config = []): string
+    public function copyToWebroot(?string $filename = null, string $path = 'files', array $config = []): string
     {
         $default_config = [
             'no_prefix' => false,
