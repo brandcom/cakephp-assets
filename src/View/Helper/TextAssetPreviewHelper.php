@@ -26,7 +26,7 @@ class TextAssetPreviewHelper extends Helper
     public function plainTextPreview(Asset $asset, array $options = []): string
     {
         if (!$asset->exists()) {
-            return __('The Asset\'s file does not exist. ');
+            return __d('assets', 'The Asset\'s file does not exist.');
         }
 
         try {
@@ -37,8 +37,8 @@ class TextAssetPreviewHelper extends Helper
                     return $this->printFormatted($asset);
             }
         } catch (\Exception $e) {
-            return __d('assets', "Error at TextAssetPreviewHelper: The Asset #{$asset->id}'s 
-            file with the filetype {$asset->filetype} is not readable. ");
+            return __d('assets', "Error at TextAssetPreviewHelper: The Asset #{0}'s " .
+            'file with the filetype {1} is not readable.', $asset->id, $asset->filetype);
         }
     }
 

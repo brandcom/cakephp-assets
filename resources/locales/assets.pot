@@ -1,0 +1,177 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2022-11-23 22:09+0100\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: src/Controller/Admin/AssetsController.php:57
+#: src/Controller/Admin/AssetsController.php:81
+msgid "The asset has been saved."
+msgstr ""
+
+#: src/Controller/Admin/AssetsController.php:61
+#: src/Controller/Admin/AssetsController.php:85
+msgid "The asset could not be saved. Please, try again."
+msgstr ""
+
+#: src/Controller/Admin/AssetsController.php:102
+msgid "The asset has been deleted."
+msgstr ""
+
+#: src/Controller/Admin/AssetsController.php:104
+msgid "The asset could not be deleted. Please, try again."
+msgstr ""
+
+#: src/Model/Entity/Asset.php:174
+msgid "File not found."
+msgstr ""
+
+#: src/Model/Entity/Asset.php:183
+msgid "Cannot get ImageAsset."
+msgstr ""
+
+#: src/View/Helper/TextAssetPreviewHelper.php:29
+msgid "The Asset's file does not exist."
+msgstr ""
+
+#: src/View/Helper/TextAssetPreviewHelper.php:40
+msgid "Error at TextAssetPreviewHelper: The Asset #{0}'s file with the filetype {1} is not readable."
+msgstr ""
+
+#: templates/Admin/Assets/add.php:10
+#: templates/Admin/Assets/edit.php:10
+#: templates/Admin/Assets/index.php:27
+#: templates/Admin/Assets/view.php:10
+msgid "Actions"
+msgstr ""
+
+#: templates/Admin/Assets/add.php:11
+#: templates/Admin/Assets/edit.php:16
+#: templates/Admin/Assets/view.php:14
+msgid "List Assets"
+msgstr ""
+
+#: templates/Admin/Assets/add.php:18
+msgid "Add Asset"
+msgstr ""
+
+#: templates/Admin/Assets/add.php:26
+#: templates/Admin/Assets/edit.php:33
+msgid "Submit"
+msgstr ""
+
+#: templates/Admin/Assets/edit.php:12
+#: templates/Admin/Assets/index.php:62
+msgid "Delete"
+msgstr ""
+
+#: templates/Admin/Assets/edit.php:14
+#: templates/Admin/Assets/index.php:62
+#: templates/Admin/Assets/view.php:13
+msgid "Are you sure you want to delete # {0}?"
+msgstr ""
+
+#: templates/Admin/Assets/edit.php:23
+#: templates/Admin/Assets/view.php:11
+msgid "Edit Asset"
+msgstr ""
+
+#: templates/Admin/Assets/index.php:8
+#: templates/Admin/Assets/view.php:15
+msgid "New Asset"
+msgstr ""
+
+#: templates/Admin/Assets/index.php:9
+msgid "Assets"
+msgstr ""
+
+#: templates/Admin/Assets/index.php:26
+msgid "Preview"
+msgstr ""
+
+#: templates/Admin/Assets/index.php:60
+msgid "View"
+msgstr ""
+
+#: templates/Admin/Assets/index.php:61
+msgid "Edit"
+msgstr ""
+
+#: templates/Admin/Assets/index.php:71
+msgid "first"
+msgstr ""
+
+#: templates/Admin/Assets/index.php:72
+msgid "previous"
+msgstr ""
+
+#: templates/Admin/Assets/index.php:74
+msgid "next"
+msgstr ""
+
+#: templates/Admin/Assets/index.php:75
+msgid "last"
+msgstr ""
+
+#: templates/Admin/Assets/index.php:78
+msgid "Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total"
+msgstr ""
+
+#: templates/Admin/Assets/view.php:12
+msgid "Delete Asset"
+msgstr ""
+
+#: templates/Admin/Assets/view.php:28
+msgid "Id"
+msgstr ""
+
+#: templates/Admin/Assets/view.php:32
+msgid "Title"
+msgstr ""
+
+#: templates/Admin/Assets/view.php:36
+msgid "Category"
+msgstr ""
+
+#: templates/Admin/Assets/view.php:40
+msgid "Filename"
+msgstr ""
+
+#: templates/Admin/Assets/view.php:44
+msgid "Directory"
+msgstr ""
+
+#: templates/Admin/Assets/view.php:48
+msgid "Mimetype"
+msgstr ""
+
+#: templates/Admin/Assets/view.php:52
+msgid "Filesize"
+msgstr ""
+
+#: templates/Admin/Assets/view.php:56
+msgid "Created"
+msgstr ""
+
+#: templates/Admin/Assets/view.php:60
+msgid "Modified"
+msgstr ""
+
+#: templates/Admin/Assets/view.php:65
+msgid "Description"
+msgstr ""
+
+#: templates/Admin/Assets/view.php:72
+msgid "Content"
+msgstr ""
+
