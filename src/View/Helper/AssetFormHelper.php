@@ -90,7 +90,7 @@ class AssetFormHelper extends Helper
         $associationName = $this->getAssociationName($fieldName);
         $this->setAsset($associationName);
 
-        return $this->getView()->element('Assets.Helper/AssetForm/UploadField', [
+        return $this->getView()->element('Assets.Helper/AssetForm/upload-field', [
             'associationName' => $this->getAssociationName($fieldName),
             'context' => $this->context,
             'asset' => $this->asset,

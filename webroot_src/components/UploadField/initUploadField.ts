@@ -4,6 +4,6 @@ import VueMountingHelper from '../../helpers/VueMountingHelper';
 VueMountingHelper.mount([
 	{
 		vueApp: UploadField,
-		cssSelector: '[data-vue-UploadField]',
+		cssSelector: '[data-vue-upload-field]',
 	},
 ]);
