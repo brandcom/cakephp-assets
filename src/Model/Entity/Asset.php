@@ -24,7 +24,7 @@ use Nette\Utils\Strings;
  * @property string|null $category
  * @property string $filename
  * @property string $directory
- * @property string $mimetype
+ * @property string|null $mimetype
  * @property string $filesize
  * @property string $filetype
  * @property string $absolute_path
@@ -41,7 +41,7 @@ class Asset extends Entity
      * be mass assigned. For security purposes, it is advised to set '*' to false
      * (or remove it), and explicitly make individual fields accessible as needed.
      *
-     * @var array<bool>
+     * @var array<string, bool>
      */
     protected $_accessible = [
         'title' => true,
@@ -120,11 +120,11 @@ class Asset extends Entity
         return Arrays::contains([
                 'image',
                 'video',
-            ], Strings::before($this->mimetype, '/'))
+            ], Strings::before((string)$this->mimetype, '/'))
             || Arrays::contains([
                 'pdf',
                 'json',
-            ], Strings::after($this->mimetype, '/'));
+            ], Strings::after((string)$this->mimetype, '/'));
     }
 
     /**
@@ -135,7 +135,7 @@ class Asset extends Entity
     public function isImage(): bool
     {
         return $this->exists()
-            && Strings::before($this->mimetype, '/') === 'image'
+            && Strings::before((string)$this->mimetype, '/') === 'image'
             && !Strings::contains((string)Strings::after($this->mimetype, '/'), 'svg');
     }
 
@@ -151,11 +151,16 @@ class Asset extends Entity
     /**
      * @param int $quality Image quality between 0 - 100
      * @return \Assets\Utilities\ImageAsset
+     * @throws \Assets\Error\FileNotFoundException
      * @throws \Assets\Error\InvalidAssetTypeException
      */
     public function getImage(int $quality = 90): ImageAsset
     {
         if (!$this->isImage()) {
+            if (!$this->exists()) {
+                throw new FileNotFoundException("Cannot call Asset::getImage() on #{$this->id}. The Asset's source file does not exist.");
+            }
+
             throw new InvalidAssetTypeException("Cannot call Asset::getImage() on #{$this->id} with MimeType {$this->mimetype}.");
         }
 
@@ -170,7 +175,7 @@ class Asset extends Entity
     public function getThumbnail(int $size = ImageSizes::THMB, bool $html = true): ?string
     {
         if (!$this->exists()) {
-            return __d('assets', 'File not found. ');
+            return __d('assets', 'File not found.');
         }
 
         if ($this->isImage()) {
@@ -179,7 +184,7 @@ class Asset extends Entity
 
                 return $html ? $thumbnail->getHTML() : $thumbnail->getPath();
             } catch (\Exception $e) {
-                return __d('assets', 'Cannot get ImageAsset. ');
+                return __d('assets', 'Cannot get ImageAsset.');
             }
         }
 
@@ -260,12 +265,12 @@ class Asset extends Entity
     /**
      * Will be removed due to naming inconsistency. Files are actually copied and not movedd. Use Asset::copyToWebroot instead.
      *
-     * @deprecated
      * @param string|null $filename Name of the file. Default will be the Asset's id (uuid)
      * @param string|null $path Path from webroot where the copy will be available
      * @param array $config See above
      * @return string
      * @throws \Assets\Error\FileNotFoundException
+     * @deprecated
      */
     public function moveToWebroot(?string $filename = null, ?string $path = 'files', array $config = []): string
     {

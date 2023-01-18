@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Assets;
 
 use Cake\Core\BasePlugin;
+use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
 
 /**
@@ -22,6 +23,10 @@ class Plugin extends BasePlugin
      */
     public function bootstrap(PluginApplicationInterface $app): void
     {
+        if (file_exists(ROOT . DS . 'config' . DS . 'app_assets.php')) {
+            Configure::load('app_assets');
+        }
+
         $app->addPlugin('Josegonzalez/Upload');
         $app->addPlugin('ViteHelper');
     }

@@ -6,7 +6,6 @@ namespace Assets\Controller\Admin;
 use Assets\Controller\AppController;
 use Cake\Http\CallbackStream;
 use Cake\Http\Response;
-use function __;
 
 /**
  * Assets Controller
@@ -54,11 +53,11 @@ class AssetsController extends AppController
         if ($this->getRequest()->is('post')) {
             $asset = $this->Assets->patchEntity($asset, $this->getRequest()->getData());
             if ($this->Assets->save($asset)) {
-                $this->Flash->success(__('The asset has been saved.'));
+                $this->Flash->success(__d('assets', 'The asset has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The asset could not be saved. Please, try again.'));
+            $this->Flash->error(__d('assets', 'The asset could not be saved. Please, try again.'));
         }
         $this->set(compact('asset'));
     }
@@ -78,11 +77,11 @@ class AssetsController extends AppController
         if ($this->getRequest()->is(['patch', 'post', 'put'])) {
             $asset = $this->Assets->patchEntity($asset, $this->getRequest()->getData());
             if ($this->Assets->save($asset)) {
-                $this->Flash->success(__('The asset has been saved.'));
+                $this->Flash->success(__d('assets', 'The asset has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The asset could not be saved. Please, try again.'));
+            $this->Flash->error(__d('assets', 'The asset could not be saved. Please, try again.'));
         }
         $this->set(compact('asset'));
     }
@@ -99,9 +98,9 @@ class AssetsController extends AppController
         $this->getRequest()->allowMethod(['post', 'delete']);
         $asset = $this->Assets->get($id);
         if ($this->Assets->delete($asset)) {
-            $this->Flash->success(__('The asset has been deleted.'));
+            $this->Flash->success(__d('assets', 'The asset has been deleted.'));
         } else {
-            $this->Flash->error(__('The asset could not be deleted. Please, try again.'));
+            $this->Flash->error(__d('assets', 'The asset could not be deleted. Please, try again.'));
         }
 
         return $this->redirect(['action' => 'index']);
