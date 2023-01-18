@@ -18,7 +18,9 @@ export default defineConfig({
         assetsDir: 'build',
         manifest: true,
         rollupOptions: {
-            input: './webroot_src/main.ts',
+            input: {
+				uploadField: './webroot_src/components/UploadField/initUploadField.ts',
+			},
         },
     },
     server: {

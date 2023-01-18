@@ -136,8 +136,7 @@ export default {
             const existingAssetInput = template.querySelector('.js-assets-existing-file');
 
             if (!fileInput || !existingAssetInput) {
-                console.error('Error in template. Could not find original fields template.');
-                return;
+                throw new Error('Error in template. Could not find original fields template.');
             }
 
             this.originalFields = {
