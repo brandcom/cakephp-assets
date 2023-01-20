@@ -16,9 +16,10 @@
 		"ext-json": "*"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "^8.5 || ^9.3",
+		"cakedc/cakephp-phpstan": "^2.0",
 		"cakephp/cakephp-codesniffer": "^4.5",
-		"cakedc/cakephp-phpstan": "^2.0"
+		"phpunit/phpunit": "^8.5 || ^9.3",
+		"psalm/phar": "^5.4"
 	},
 	"autoload": {
 		"psr-4": {
