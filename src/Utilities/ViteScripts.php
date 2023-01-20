@@ -5,6 +5,9 @@ namespace Assets\Utilities;
 
 class ViteScripts
 {
+    /**
+     * @return array
+     */
     public static function getViteConfig(): array
     {
         return [

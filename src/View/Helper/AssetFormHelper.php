@@ -33,36 +33,22 @@ class AssetFormHelper extends Helper
      * The Entity an Asset belongs to,
      *   e.g. a User which has a ProfilePicture (Asset)
      *
-     * @var \Cake\ORM\Entity|null
+     * @var \Cake\ORM\Entity|empty
      */
-    private ?Entity $context;
+    private Entity $context;
 
-    private ?Asset $asset;
-
-    /**
-     * @param array $config
-     * @return void
-     * @throws \Assets\Error\InvalidArgumentException
-     */
-    public function initialize(array $config): void
-    {
-        parent::initialize($config);
-        $this->setContext(null);
-        $this->setAsset();
-    }
+    private Asset $asset;
 
     /**
      * Starts a form with type 'file'
      *
-     * @param \Cake\ORM\Entity|null $context
-     * @param array $options
+     * @param \Cake\ORM\Entity $context the Form's context - cann also be passed AssetFormHelper::control() via $options
+     * @param array $options options for the Form. 'type' => 'file' will always be set.
      * @return string
-     * @throws \Assets\Error\InvalidArgumentException
-     * @see FormHelper::create()
      */
-    public function create(?Entity $context = null, array $options = []): string
+    public function create(Entity $context, array $options = []): string
     {
-        $this->setContext($context);
+        $this->context = $context;
         $options['type'] = 'file';
 
         return $this->Form->create($context, $options);
@@ -71,7 +57,7 @@ class AssetFormHelper extends Helper
     /**
      * Creates an upload field for the Assets plugin
      *
-     * @param string $fieldName
+     * @param string $fieldName name of the field
      * @param array $options can contain 'context' if the form was not started through AssetFormHelper::create
      * @return string
      * @throws \Assets\Error\InvalidArgumentException
@@ -79,16 +65,17 @@ class AssetFormHelper extends Helper
      */
     public function control(string $fieldName, array $options = []): string
     {
-        $this->setContext($options['context'] ?? null);
+        if (!empty($options['context'])) {
+            $this->context = $options['context'];
+        }
 
-        if (!$this->context) {
+        if (!property_exists($this, 'context')) {
             throw new MissingContextException(
                 'Set a $context by starting the form through AssetFormHelper::create or by passing it through the $options array.'
             );
         }
 
-        $associationName = $this->getAssociationName($fieldName);
-        $this->setAsset($associationName);
+        $this->asset = $this->context->get($this->getAssociationName($fieldName));
 
         return $this->getView()->element('Assets.Helper/AssetForm/upload-field', [
             'associationName' => $this->getAssociationName($fieldName),
@@ -98,7 +85,7 @@ class AssetFormHelper extends Helper
     }
 
     /**
-     * @param string $fieldName
+     * @param string $fieldName name of the field
      * @return string
      * @throws \Assets\Error\InvalidArgumentException
      */
@@ -111,36 +98,5 @@ class AssetFormHelper extends Helper
         }
 
         return $association;
-    }
-
-    /**
-     * @param $context
-     * @return void
-     */
-    private function setContext($context)
-    {
-        if ($context !== null && !is_a($context, Entity::class)) {
-            throw new InvalidArgumentException('$context has to be an Entity.');
-        }
-
-        $this->context = $context;
-    }
-
-    private function setAsset(?string $associationName = null)
-    {
-        if (!$this->context) {
-            $this->asset = null;
-
-            return;
-        }
-
-        $asset = $this->context->get($associationName);
-        if ($asset && is_a($asset, Asset::class)) {
-            $this->asset = $asset;
-
-            return;
-        }
-
-        $this->asset = null;
     }
 }
