@@ -1,0 +1,20 @@
+{
+  "webroot_src/components/UploadField/initUploadField-legacy.ts": {
+    "file": "build/uploadField-legacy.5559f8a7.js",
+    "src": "webroot_src/components/UploadField/initUploadField-legacy.ts",
+    "isEntry": true
+  },
+  "vite/legacy-polyfills": {
+    "file": "build/polyfills-legacy.2eee91f5.js",
+    "src": "vite/legacy-polyfills",
+    "isEntry": true
+  },
+  "webroot_src/components/UploadField/initUploadField.ts": {
+    "file": "build/uploadField.36ca71f1.js",
+    "src": "webroot_src/components/UploadField/initUploadField.ts",
+    "isEntry": true,
+    "css": [
+      "build/uploadField.f144c089.css"
+    ]
+  }
+}

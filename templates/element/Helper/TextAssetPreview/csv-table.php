@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \Assets\View\AppView $this
+ * @var \App\View\AppView $this
  * @var array $header
  * @var \League\Csv\MapIterator $rows
  */
