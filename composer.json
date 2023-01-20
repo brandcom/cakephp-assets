@@ -12,14 +12,12 @@
 		"josegonzalez/cakephp-upload": "^6.0",
 		"league/csv": "^9.8",
 		"nette/finder": "^2.5",
-		"nette/utils": "^3.2",
-		"ext-json": "*"
+		"nette/utils": "^3.2"
 	},
 	"require-dev": {
 		"cakedc/cakephp-phpstan": "^2.0",
 		"cakephp/cakephp-codesniffer": "^4.5",
-		"phpunit/phpunit": "^8.5 || ^9.3",
-		"psalm/phar": "^5.4"
+		"phpunit/phpunit": "^8.5 || ^9.3"
 	},
 	"autoload": {
 		"psr-4": {
@@ -36,8 +34,13 @@
 	"scripts": {
 		"cs-check": "phpcs --colors --parallel=16 -p src/",
 		"cs-fix": "phpcbf --colors --parallel=16 -p src/",
-		"stan": "phpstan analyse",
-		"stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^1.7.9 && mv composer.backup composer.json",
+		"phpstan": "phpstan.phar analyse",
+		"psalm": "psalm.phar --show-info=false",
+		"stan": [
+			"@phpstan",
+			"@psalm"
+		],
+		"stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:~1.9.0 psalm/phar:~5.4.0 && mv composer.backup composer.json",
 		"lowest-setup": "composer update --prefer-lowest --prefer-stable --prefer-dist --no-interaction && cp composer.json composer.backup && composer require --dev dereuromark/composer-prefer-lowest && mv composer.backup composer.json"
 	},
 	"config": {
