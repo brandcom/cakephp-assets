@@ -69,7 +69,7 @@ class PictureHelper extends Helper
         }
 
         if (!is_a($image, ImageAsset::class)) {
-            throw new \http\Exception\InvalidArgumentException(
+            throw new InvalidArgumentException(
                 '$image must be passed as an ImageAsset, an Asset which represents an image, or an absolute path (string) to a static image file.'
             );
         }

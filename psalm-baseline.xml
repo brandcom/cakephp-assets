@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.x-dev@">
+  <file src="src/Controller/Admin/AssetsController.php">
+    <MissingDependency occurrences="1">
+      <code>AppController</code>
+    </MissingDependency>
+  </file>
+  <file src="src/Controller/AppController.php">
+    <UndefinedClass occurrences="1">
+      <code>BaseController</code>
+    </UndefinedClass>
+  </file>
+  <file src="src/Model/Entity/Asset.php">
+    <NonInvariantDocblockPropertyType occurrences="1">
+      <code>$_accessible</code>
+    </NonInvariantDocblockPropertyType>
+    <PossiblyNullReference occurrences="1">
+      <code>toDateTimeString</code>
+    </PossiblyNullReference>
+  </file>
+</files>

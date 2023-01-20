@@ -124,5 +124,8 @@ jobs:
       - name: Run phpstan
         run: vendor/bin/phpstan analyse --error-format=github
 
+      - name: Run psalm
+        run: vendor/bin/psalm.phar --output-format=github
+
       - name: Run phpcs
         run: composer cs-check
