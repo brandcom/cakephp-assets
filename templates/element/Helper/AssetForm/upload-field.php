@@ -28,18 +28,20 @@ $i18n = [
 	'chooseExisting' => __d('assets', 'Choose existing'),
 ];
 
-$manifest = json_decode(file_get_contents(ROOT . '/plugins/Assets/webroot/manifest.json'), true);
-$scriptUrl = null;
-$cssUrl = null;
-foreach ($manifest as $file => $info) {
-	if (\Nette\Utils\Strings::contains($file, 'initUploadField.ts')) {
-		$scriptUrl = $info['file'] ?? null;
-		$cssUrl = $info['css'][0] ?? null;
-	}
-}
-if (!$scriptUrl) {
-	throw new Exception('no js found');
-}
+$pluginRoot = 'vendor' . DS . 'passchn' . DS . 'cakephp-assets';
+$this->ViteScripts->script([], \ViteHelper\Utilities\ViteHelperConfig::create([
+	'forceProductionMode' => true,
+	'build' => [
+		'manifest' => ROOT . DS . $pluginRoot . DS . 'webroot' . DS . 'dist' . DS . 'manifest.json',
+	],
+	'plugin' => 'Assets',
+	'development' => [
+		'scriptEntries' => [
+			$pluginRoot . DS . 'webroot_src/components/UploadField/initUploadField.ts',
+		],
+	],
+]));
+
 ?>
 <script
 	src="<?= $this->Url->assetUrl('Assets.' . $scriptUrl) ?>"
