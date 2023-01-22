@@ -6,7 +6,7 @@
 	"require": {
 		"php": ">=8.0",
 		"ext-fileinfo": "*",
-		"passchn/cakephp-vite": "dev-future/v1",
+		"passchn/cakephp-vite": "^1.0.0",
 		"cakephp/cakephp": "^4.2.10",
 		"intervention/image": "^2.7.2",
 		"josegonzalez/cakephp-upload": "^7.0.1",
