@@ -118,17 +118,6 @@ class AssetsTable extends Table
     }
 
     /**
-     * @param \Cake\Event\EventInterface $e The event
-     * @param \Cake\ORM\Query $query The query associated to the event
-     * @param \ArrayObject $options Options passed to the event
-     * @return \Cake\ORM\Query
-     */
-    public function beforeFind(EventInterface $e, Query $query, \ArrayObject $options)
-    {
-        return $query->orderDesc('modified');
-    }
-
-    /**
      * @return string
      */
     public static function getAssetsDir(): string

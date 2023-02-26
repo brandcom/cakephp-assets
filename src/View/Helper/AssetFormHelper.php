@@ -33,13 +33,19 @@ class AssetFormHelper extends Helper
      * The Entity an Asset belongs to,
      *   e.g. a User which has a ProfilePicture (Asset)
      *
-     * @var \Cake\ORM\Entity|empty
+     * @var \Cake\ORM\Entity|null
      */
-    private Entity $context;
+    private ?Entity $context;
 
     private Asset $asset;
 
-    /**
+	public function initialize(array $config): void
+	{
+		$this->context = null;
+		parent::initialize($config);
+	}
+
+	/**
      * Starts a form with type 'file'
      *
      * @param \Cake\ORM\Entity $context the Form's context - cann also be passed AssetFormHelper::control() via $options
@@ -69,16 +75,21 @@ class AssetFormHelper extends Helper
             $this->context = $options['context'];
         }
 
-        if (!property_exists($this, 'context')) {
+        if (null === $this->context) {
             throw new MissingContextException(
-                'Set a $context by starting the form through AssetFormHelper::create or by passing it through the $options array.'
+                sprintf(
+					'Set a $context for the field "%s" by starting the form through'
+					. 'AssetFormHelper::create or by passing it through the $options array.',
+					$fieldName,
+				)
             );
         }
 
-        $this->asset = $this->context->get($this->getAssociationName($fieldName));
+		$associationName = $this->getAssociationName($fieldName);
+        $this->asset = $this->context->get($associationName);
 
         return $this->getView()->element('Assets.Helper/AssetForm/upload-field', [
-            'associationName' => $this->getAssociationName($fieldName),
+            'associationName' => $associationName,
             'context' => $this->context,
             'asset' => $this->asset,
         ]);

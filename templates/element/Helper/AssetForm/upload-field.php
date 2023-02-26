@@ -15,6 +15,7 @@ $fileInfo = [
 
 if ($asset) {
 	$fileInfo['asset'] = [
+		'id' => $asset->id,
 		'fileSize' => $asset->getFileSizeInfo(),
 		'thumbnail' => $asset->getThumbnail(\Assets\Enum\ImageSizes::SM, false),
 		'mimetype' => $asset->mimetype,
@@ -29,38 +30,27 @@ $i18n = [
 ];
 
 $pluginRoot = 'vendor' . DS . 'passchn' . DS . 'cakephp-assets';
-$this->ViteScripts->script([], \ViteHelper\Utilities\ViteHelperConfig::create([
-	'forceProductionMode' => true,
+$this->ViteScripts->script([
+	'cssBlock' => 'assetsUploadFieldHead',
+	'block' => 'assetsUploadFieldBody',
+], \ViteHelper\Utilities\ViteHelperConfig::create([
+	'forceProductionMode' => false,
 	'build' => [
-		'manifest' => ROOT . DS . $pluginRoot . DS . 'webroot' . DS . 'dist' . DS . 'manifest.json',
+		'manifest' => ROOT . DS . $pluginRoot . DS . 'webroot' . DS . 'manifest.json',
 	],
 	'plugin' => 'Assets',
 	'development' => [
+		'url' => 'http://localhost:3005/assets',
 		'scriptEntries' => [
-			$pluginRoot . DS . 'webroot_src/components/UploadField/initUploadField.ts',
+			'webroot_src/components/UploadField/initUploadField.ts',
 		],
 	],
 ]));
 
 ?>
-<script
-	src="<?= $this->Url->assetUrl('Assets.' . $scriptUrl) ?>"
-	type="module"
-></script>
-<link rel="stylesheet" href="<?= $this->Url->assetUrl('Assets.' . $cssUrl) ?>">
-<div data-vue-upload-field>
-	<div class="vue-json" title="file-info" style="display: none;">
-		<?= json_encode($fileInfo, JSON_HEX_QUOT | JSON_HEX_TAG) ?>
-	</div>
-	<div class="vue-json" title="i18n" style="display: none;">
-		<?= json_encode($i18n, JSON_HEX_QUOT | JSON_HEX_TAG) ?>
-	</div>
-	<div class="vue-html" title="original-fields-template">
-		<?= $this->Form->control(sprintf('%s.filename', $associationName), [
-			'type' => 'file',
-			'label' => __d('assets', 'Choose file'),
-			'class' => 'js-assets-upload-field',
-			'required' => false,
-		]) ?>
-	</div>
+
+<?= $this->fetch('assetsUploadFieldHead') ?>
+<div data-assets-upload-field>
+	<?= json_encode($fileInfo, JSON_HEX_QUOT) ?>
 </div>
+<?= $this->fetch('assetsUploadFieldBody') ?>

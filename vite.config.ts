@@ -10,8 +10,8 @@ export default defineConfig({
         vue(),
     ],
     build: {
-        emptyOutDir: true,
-        outDir: './webroot/dist',
+        emptyOutDir: false,
+        outDir: './webroot',
         manifest: true,
         rollupOptions: {
             input: {
@@ -23,8 +23,9 @@ export default defineConfig({
         hmr: {
             protocol: 'ws',
             host: 'localhost',
-            port: 3000,
         },
+		port: 3005,
+		strictPort: true,
     },
     /**
      * e.g. for css files from asyncronously loaded modules
