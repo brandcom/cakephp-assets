@@ -37,7 +37,7 @@ class AssetFormHelper extends Helper
      */
     private ?Entity $context;
 
-    private Asset $asset;
+    private ?Asset $asset;
 
 	public function initialize(array $config): void
 	{

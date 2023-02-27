@@ -10,6 +10,7 @@ use Assets\Utilities\ImageAsset;
 use Cake\Core\Configure;
 use Cake\ORM\Entity;
 use Cake\Routing\Router;
+use Laminas\Diactoros\UploadedFile;
 use League\Csv\Reader;
 use Nette\Utils\Arrays;
 use Nette\Utils\FileSystem;
@@ -22,7 +23,7 @@ use Nette\Utils\Strings;
  * @property string $title
  * @property string|null $description
  * @property string|null $category
- * @property string $filename
+ * @property string|UploadedFile $filename
  * @property string $directory
  * @property string|null $mimetype
  * @property string $filesize
@@ -90,10 +91,18 @@ class Asset extends Entity
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
 	protected function _getAbsolutePath(): string
 	{
+		/**
+		 * Can also be an UploadedFile
+		 * @see UploadedFile
+		 */
+		if (!is_string($this->filename)) {
+			return '';
+		}
+
 		return ROOT . DS . $this->directory . DS . $this->filename;
 	}
 

@@ -14,6 +14,8 @@
 			</p>
 			<a
 				:href="assetData.admin_download_link"
+				target="_blank"
+				:title="'open file: ' + assetData.filename"
 			>
 				Download
 				({{ assetData.file_size_info }})

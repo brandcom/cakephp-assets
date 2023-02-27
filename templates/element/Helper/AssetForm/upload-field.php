@@ -51,6 +51,13 @@ $this->ViteScripts->script([
 
 <?= $this->fetch('assetsUploadFieldHead') ?>
 <div data-assets-upload-field>
-	<?= json_encode($fileInfo, JSON_HEX_QUOT) ?>
+	<div data-json>
+		<?= json_encode($fileInfo, JSON_HEX_QUOT) ?>
+	</div>
+	<?= $this->Form->control($associationName . '_id', [
+		'type' => 'text',
+		'data-field',
+		'tabindex' => '-1',
+	]) ?>
 </div>
 <?= $this->fetch('assetsUploadFieldBody') ?>

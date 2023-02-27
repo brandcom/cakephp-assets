@@ -8,6 +8,7 @@ createApp(FilePool).mount(filePoolDiv);
 
 document.querySelectorAll('[data-assets-upload-field]').forEach(el => {
 	createApp(UploadField, {
-		fileInfo: JSON.parse(el.textContent as string)
+		fileInfo: JSON.parse(el.querySelector('[data-json]')?.textContent as string),
+		field: el.querySelector('input'),
 	}).mount(el);
 });

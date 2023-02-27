@@ -33,31 +33,53 @@
 			x
 		</button>
 	</div>
+	<div class="field" v-html="fieldHtml"></div>
 </template>
 
 <script setup>
 
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 
 const props = defineProps({
 	fileInfo: {
+		type: Object,
+		required: true,
+	},
+	field: {
 		type: Object,
 		required: true,
 	}
 });
 
 const asset = ref({});
-const field = ref({});
+const field = ref(null);
 
 onMounted(() => {
 	asset.value.id = props.fileInfo.asset?.id;
 	asset.value.filename = props.fileInfo.asset?.filename;
 	asset.value.thumbnail = props.fileInfo.asset?.thumbnail;
+	field.value = props.field;
 	addEventListeners();
+});
+
+const updateField = (attributes = {}) => {
+	const copy = field.value;
+	field.value = null;
+	Object.keys(attributes).forEach(attribute => {
+		copy?.setAttribute(attribute, attributes[attribute]);
+	});
+	field.value = copy;
+}
+
+const fieldHtml = computed(() => {
+	return field.value?.outerHTML;
 });
 
 const clear = () => {
 	asset.value = {};
+	updateField({
+		value: '',
+	})
 }
 
 const openFilePool = () => {
@@ -89,9 +111,21 @@ const addEventListeners = () => {
 		asset.value.id = eventAsset.id;
 		asset.value.filename = eventAsset.filename;
 		asset.value.thumbnail = eventAsset.thumbnail_link;
+		updateField({
+			value: eventAsset.id,
+		})
 	});
 }
 
 </script>
 <style lang="scss" scoped>
+.field {
+	position: absolute;
+	height: 1px;
+	width: 1px;
+	opacity: 0;
+	pointer-events: none;
+	top: -10000px;
+	left: -10000px;
+}
 </style>
