@@ -10,10 +10,13 @@
 		></button>
 		<div class="popup-wrapper">
 			<div class="popup">
-				<FilePoolContent
-					:context="context"
-					@select-asset="onSelectAsset"
-				/>
+				<div class="popup-content">
+					<FilePoolContent
+						:context="context"
+						@select-asset="onSelectAsset"
+					/>
+				</div>
+				<PopupSidebar :context="context"></PopupSidebar>
 			</div>
 		</div>
 	</div>
@@ -23,6 +26,7 @@
 
 import {onMounted, ref} from "vue";
 import FilePoolContent from "./FilePoolContent.vue";
+import PopupSidebar from "./PopupSidebar.vue";
 
 const isOpen = ref(false);
 
@@ -71,13 +75,11 @@ onMounted(() => {
 }
 
 .popup {
+	position: relative;
 	pointer-events: auto;
 	flex-grow: 1;
-	border: 1px solid #000;
 	background-color: #fff;
 	color: #000;
-	padding: 1rem;
-	overflow-y: auto;
 	width: 100%;
 	height: 100%;
 }
@@ -87,5 +89,11 @@ onMounted(() => {
 		max-height: 60vh;
 		max-width: 75vw;
 	}
+}
+
+.popup-content {
+	padding: 1rem;
+	height: 100%;
+	overflow-y: auto;
 }
 </style>

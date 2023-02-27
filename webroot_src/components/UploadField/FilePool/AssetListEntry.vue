@@ -20,6 +20,13 @@
 				Download
 				({{ assetData.file_size_info }})
 			</a>
+			<a
+				:href="'/admin/assets/assets/edit/' + assetData.id"
+				target="_blank"
+				:title="'edit asset: ' + assetData.filename"
+			>
+				Edit
+			</a>
 			<button
 				@click="onSelectAsset"
 				type="button"

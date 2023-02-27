@@ -1,6 +1,22 @@
 <template>
-	Content <br>
-	{{ context }}
+	<ul>
+		<li>
+			<button
+				type="button"
+				@click="fetchRecent"
+			>
+				recent
+			</button>
+		</li>
+		<li>
+			<button
+				type="button"
+				@click="fetchOldest"
+			>
+				oldest
+			</button>
+		</li>
+	</ul>
 	<ul v-if="assets.length">
 		<li v-for="asset in assets">
 			<AssetListEntry
@@ -25,10 +41,22 @@ const props = defineProps({
 });
 
 const assets = ref([]);
+const conditions = ref({
+	'filename LIKE': '%flow%',
+});
 const emit = defineEmits(['selectAsset']);
 
 onMounted(() => {
-	FilePoolRequest.query(props.context)
+	fetchEntries();
+});
+
+const fetchEntries = (conditions = {}, order) => {
+	assets.value = [];
+	FilePoolRequest.query({
+		context: props.context,
+		conditions: conditions,
+		order: order,
+	})
 		.then(response => {
 			if (true !== response.data.success) {
 				throw new Error('request went wrong');
@@ -38,7 +66,14 @@ onMounted(() => {
 		.catch(error => {
 			console.error('Error fetching files.', error);
 		});
-});
+}
+
+const fetchRecent = () => {
+	fetchEntries();
+}
+const fetchOldest = () => {
+	fetchEntries({}, 'Assets.created ASC');
+}
 
 const onSelectAsset = ($event) => {
 	emit('selectAsset', $event);
@@ -51,4 +86,5 @@ ul {
 	list-style: none;
 	padding: 0;
 }
+
 </style>

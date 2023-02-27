@@ -57,7 +57,7 @@ const field = ref(null);
 onMounted(() => {
 	asset.value.id = props.fileInfo.asset?.id;
 	asset.value.filename = props.fileInfo.asset?.filename;
-	asset.value.thumbnail = props.fileInfo.asset?.thumbnail;
+	asset.value.thumbnail = props.fileInfo.asset?.thumbnail_link;
 	field.value = props.field;
 	addEventListeners();
 });

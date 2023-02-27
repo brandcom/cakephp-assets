@@ -235,10 +235,10 @@ class Asset extends Entity
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 * @deprecated Use virtual field. Will be removed in v2.0
 	 */
-	public function getFileSizeInfo(): string
+	public function getFileSizeInfo(): ?string
 	{
 		return $this->_getFileSizeInfo();
 	}

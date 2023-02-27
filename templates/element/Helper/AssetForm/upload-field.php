@@ -10,23 +10,7 @@ $fileInfo = [
 	'entityId' => $context->id,
 	'entityModel' => $context->getSource(),
 	'associationName' => $associationName,
-	'asset' => null,
-];
-
-if ($asset) {
-	$fileInfo['asset'] = [
-		'id' => $asset->id,
-		'fileSize' => $asset->getFileSizeInfo(),
-		'thumbnail' => $asset->getThumbnail(\Assets\Enum\ImageSizes::SM, false),
-		'mimetype' => $asset->mimetype,
-		'filename' => $asset->filename,
-		'downloadLink' => $asset->getDownloadLink(),
-	];
-}
-
-$i18n = [
-	'uploadNew' => __d('assets', 'Upload new'),
-	'chooseExisting' => __d('assets', 'Choose existing'),
+	'asset' => $asset,
 ];
 
 $pluginRoot = 'vendor' . DS . 'passchn' . DS . 'cakephp-assets';

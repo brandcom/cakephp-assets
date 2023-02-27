@@ -28,14 +28,17 @@ class FilePoolController extends AppController
 	public function query(): Response
 	{
 		$context = $this->getRequest()->getData('context');
+		$conditions = $this->getRequest()->getData('conditions');
+		$order = $this->getRequest()->getData('order', 'Assets.created DESC');
 
 		$assets = $this->fetchTable('Assets.Assets')
 			->find()
-			->orderDesc('Assets.created')
+			->order($order)
 			->where([
 				'filename is not' => null,
 				'filename !=' => '',
 			])
+			->where($conditions)
 			->limit(25)
 			->toArray();
 
