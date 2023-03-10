@@ -73,10 +73,7 @@ $this->belongsTo('Userimages')
     ->setForeignKey('userimage_id')
     ->setClassName('Assets.Assets');
 ```
-**Changes**
-> New in Version 0.1.3: `AssetsAssetsTable` is now `AssetsTable`, `AssetsAsset` is `Asset`.
-> 
-> Don't do this anymore: `->setClassName('Assets.AssetsAssets')`
+> This does not work anymore. The `cakephp-bake` plugin now seems to detect that you don't actually have a `userimages` table and will not assume a `belongsTo` relation. You will have to write the code yourself. 
 
 You can now put an upload field for your Userimage e.g. in `templates/Users/edit.php`: 
 ```
