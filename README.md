@@ -51,6 +51,8 @@ bin/cake migrations migrate -p Assets
 
 Now you should have an `assets_assets` and an `assets_phinxlog` table in your database. 
 
+> Having issues? Check out [this demo app](https://github.com/passchn/cakephp-assets-example-app/) or the [single commits](https://github.com/passchn/cakephp-assets-example-app/commits/main) to see how to setup the plugin. 
+
 ## Uploading Files
 
 ### AssetsController
