@@ -11,7 +11,6 @@
 		"intervention/image": "^2.7.2",
 		"josegonzalez/cakephp-upload": "cake-5-dev",
 		"league/csv": "^9.8",
-		"nette/finder": "^2.5",
 		"nette/utils": "^4.0"
 	},
 	"require-dev": {
