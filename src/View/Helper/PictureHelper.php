@@ -20,9 +20,9 @@ class PictureHelper extends Helper
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [];
+    protected array $_defaultConfig = [];
 
-    public $helpers = [
+    public array $helpers = [
         'Html',
     ];
 

@@ -16,7 +16,7 @@ class TextAssetPreviewHelper extends Helper
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [];
+    protected array $_defaultConfig = [];
 
     /**
      * @param \Assets\Model\Entity\Asset $asset The asset entity

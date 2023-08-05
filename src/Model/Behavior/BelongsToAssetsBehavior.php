@@ -18,7 +18,7 @@ class BelongsToAssetsBehavior extends Behavior
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [];
+    protected array $_defaultConfig = [];
 
     /**
      * @param \Cake\Event\EventInterface $event The beforeSave event
