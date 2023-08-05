@@ -7,7 +7,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\I18n\DateTime;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Laminas\Diactoros\UploadedFile;
@@ -120,13 +120,13 @@ class AssetsTable extends Table
 
     /**
      * @param \Cake\Event\EventInterface $e The event
-     * @param \Cake\ORM\Query $query The query associated to the event
+     * @param SelectQuery $query The query associated to the event
      * @param \ArrayObject $options Options passed to the event
-     * @return \Cake\ORM\Query
+     * @return SelectQuery
      */
-    public function beforeFind(EventInterface $e, Query $query, \ArrayObject $options)
+    public function beforeFind(EventInterface $e, SelectQuery $query, \ArrayObject $options): SelectQuery
     {
-        return $query->orderDesc('modified');
+        return $query->orderByDesc('modified');
     }
 
     /**
