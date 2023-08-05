@@ -29,8 +29,8 @@ use Nette\Utils\Strings;
  * @property string $filetype
  * @property string $absolute_path
  * @property string $public_filename
- * @property \Cake\I18n\FrozenTime|null $created
- * @property \Cake\I18n\FrozenTime|null $modified
+ * @property \Cake\I18n\DateTime|null $created
+ * @property \Cake\I18n\DateTime|null $modified
  */
 class Asset extends Entity
 {

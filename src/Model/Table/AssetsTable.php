@@ -6,7 +6,7 @@ namespace Assets\Model\Table;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -56,7 +56,7 @@ class AssetsTable extends Table
                         return $this->fileNameCallback($table, $entity, $data, $field, $settings);
                     }
 
-                    $now = new FrozenTime();
+                    $now = new DateTime();
                     $pathInfo = pathinfo((string)$data->getClientFilename());
                     $basename = preg_replace('#\p{C}+#u', '', $pathInfo['basename']);
 

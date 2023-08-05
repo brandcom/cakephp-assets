@@ -9,7 +9,7 @@ use Assets\Error\FilterNotFoundException;
 use Assets\Error\UnkownErrorException;
 use Assets\Model\Entity\Asset;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\View\Helper\HtmlHelper;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
@@ -105,7 +105,7 @@ class ImageAsset
         $asset->mimetype = mime_content_type($absolute_path) ?: 'unknown';
         $asset->title = $options['title'] ?? null;
         $asset->description = null;
-        $asset->modified = FrozenTime::createFromTimestamp($splFileInfo->getMTime());
+        $asset->modified = DateTime::createFromTimestamp($splFileInfo->getMTime());
         $asset->created = $asset->modified;
 
         $quality = $options['quality'] ?? 90;
