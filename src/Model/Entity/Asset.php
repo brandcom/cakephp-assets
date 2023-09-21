@@ -76,11 +76,8 @@ class Asset extends Entity
         if (is_readable($relativeOrAbsolute)) {
             return $relativeOrAbsolute;
         }
-        $path = ROOT . $relativeOrAbsolute;
-        if (is_readable($path)) {
-            return $path;
-        }
-        throw new \Exception('Could not find image file.');
+
+        return ROOT . $relativeOrAbsolute;
     }
 
     /**
