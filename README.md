@@ -51,6 +51,8 @@ bin/cake migrations migrate -p Assets
 
 Now you should have an `assets_assets` and an `assets_phinxlog` table in your database. 
 
+> Having issues? Check out [this demo app](https://github.com/passchn/cakephp-assets-example-app/) or the [single commits](https://github.com/passchn/cakephp-assets-example-app/commits/main) to see how to setup the plugin. 
+
 ## Uploading Files
 
 ### AssetsController
@@ -73,10 +75,7 @@ $this->belongsTo('Userimages')
     ->setForeignKey('userimage_id')
     ->setClassName('Assets.Assets');
 ```
-**Changes**
-> New in Version 0.1.3: `AssetsAssetsTable` is now `AssetsTable`, `AssetsAsset` is `Asset`.
-> 
-> Don't do this anymore: `->setClassName('Assets.AssetsAssets')`
+> This does not work anymore. The `cakephp-bake` plugin from version `2.8` onwards seems to detect that you don't actually have a `userimages` table and will not assume a `belongsTo` relation. You will have to write the code yourself or downgrade to version `2.7`. 
 
 You can now put an upload field for your Userimage e.g. in `templates/Users/edit.php`: 
 ```

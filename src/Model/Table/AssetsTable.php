@@ -58,8 +58,9 @@ class AssetsTable extends Table
 
                     $now = new FrozenTime();
                     $pathInfo = pathinfo((string)$data->getClientFilename());
+                    $basename = preg_replace('#\p{C}+#u', '', $pathInfo['basename']);
 
-                    return $now->format('ymd') . '-' . $now->format('His') . '_' . $pathInfo['basename'];
+                    return $now->format('ymd') . '-' . $now->format('His') . '_' . $basename;
                 },
                 'fields' => [
                     'dir' => 'directory',
