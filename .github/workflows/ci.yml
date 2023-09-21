@@ -13,9 +13,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.0']
-        db-type: ['sqlite', 'mysql', 'pgsql']
-        prefer-lowest: ['']
+        php-version: [ '8.0' ]
+        db-type: [ 'sqlite', 'mysql', 'pgsql' ]
+        prefer-lowest: [ '' ]
         include:
           - php-version: '8.0'
             db-type: 'sqlite'
@@ -67,24 +67,24 @@ jobs:
           fi
           if ${{ matrix.prefer-lowest == 'prefer-lowest' }}; then composer lowest-setup; fi
 
-#      - name: Setup problem matchers for PHPUnit
-#        if: matrix.db-type == 'mysql'
-#        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+      - name: Setup problem matchers for PHPUnit
+        if: matrix.db-type == 'mysql'
+        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-#      - name: Wait for MySQL
-#        if: matrix.db-type == 'mysql'
-#        run: while ! `mysqladmin ping -h 127.0.0.1 --silent`; do printf 'Waiting for MySQL...\n'; sleep 2; done;
+      - name: Wait for MySQL
+        if: matrix.db-type == 'mysql'
+        run: while ! `mysqladmin ping -h 127.0.0.1 --silent`; do printf 'Waiting for MySQL...\n'; sleep 2; done;
 
-#      - name: Run PHPUnit
-#        run: |
-#          if [[ ${{ matrix.db-type }} == 'sqlite' ]]; then export DB_URL='sqlite:///:memory:'; fi
-#          if [[ ${{ matrix.db-type }} == 'mysql' ]]; then export DB_URL='mysql://root:root@127.0.0.1/cakephp?encoding=utf8'; fi
-#          if [[ ${{ matrix.db-type }} == 'pgsql' ]]; then export DB_URL='postgres://postgres:postgres@127.0.0.1/postgres'; fi
-#          if [[ ${{ matrix.php-version }} == '7.3' && ${{ matrix.db-type }} == 'sqlite' ]]; then
-#            vendor/bin/phpunit --coverage-clover=coverage.xml
-#          else
-#            vendor/bin/phpunit
-#          fi
+      - name: Run PHPUnit
+        run: |
+          if [[ ${{ matrix.db-type }} == 'sqlite' ]]; then export DB_URL='sqlite:///:memory:'; fi
+          if [[ ${{ matrix.db-type }} == 'mysql' ]]; then export DB_URL='mysql://root:root@127.0.0.1/cakephp?encoding=utf8'; fi
+          if [[ ${{ matrix.db-type }} == 'pgsql' ]]; then export DB_URL='postgres://postgres:postgres@127.0.0.1/postgres'; fi
+          if [[ ${{ matrix.php-version }} == '8.0' && ${{ matrix.db-type }} == 'sqlite' ]]; then
+            vendor/bin/phpunit --coverage-clover=coverage.xml
+          else
+            vendor/bin/phpunit
+          fi
 
       - name: Validate prefer-lowest
         run: if ${{ matrix.prefer-lowest == 'prefer-lowest' }}; then vendor/bin/validate-prefer-lowest -m; fi
