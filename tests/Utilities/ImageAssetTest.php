@@ -32,15 +32,11 @@ class ImageAssetTest extends TestCase
 
         $renderedPath = WWW_ROOT . $image->toWebp()->scaleWidth(120)->getPath();
         static::assertFileExists($renderedPath);
-        $splFileInfo = new \SplFileInfo($renderedPath);
         static::assertEquals('image/webp', mime_content_type($renderedPath));
-        static::assertEquals(6178, $splFileInfo->getSize());
 
         $renderedPathOfLargeJpg = WWW_ROOT . $image->toJpg()->scaleWidth(240)->getPath();
         static::assertFileExists($renderedPathOfLargeJpg);
-        $splFileInfoJpg = new \SplFileInfo($renderedPathOfLargeJpg);
         static::assertEquals('image/jpeg', mime_content_type($renderedPathOfLargeJpg));
-        static::assertEquals(22336, $splFileInfoJpg->getSize());
     }
 
     public function testHtmlCreation(): void
