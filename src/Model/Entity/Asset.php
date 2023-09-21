@@ -11,7 +11,6 @@ use Cake\Core\Configure;
 use Cake\ORM\Entity;
 use Cake\Routing\Router;
 use League\Csv\Reader;
-use Nette\Utils\Arrays;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Strings;
 
@@ -125,14 +124,22 @@ class Asset extends Entity
             return false;
         }
 
-        return Arrays::contains([
-                'image',
-                'video',
-            ], Strings::before((string)$this->mimetype, '/'))
-            || Arrays::contains([
-                'pdf',
-                'json',
-            ], Strings::after((string)$this->mimetype, '/'));
+        return in_array(
+            Strings::before((string)$this->mimetype, '/'),
+            [
+                    'image',
+                    'video',
+                ],
+            true
+        ) ||
+            in_array(
+                Strings::after((string)$this->mimetype, '/'),
+                [
+                    'pdf',
+                    'json',
+                ],
+                true
+            );
     }
 
     /**
@@ -144,7 +151,7 @@ class Asset extends Entity
     {
         return $this->exists()
             && Strings::before($this->mimetype ?? '', '/') === 'image'
-            && !Strings::contains((string)Strings::after($this->mimetype ?? '', '/'), 'svg');
+            && !str_contains((string)Strings::after($this->mimetype ?? '', '/'), 'svg');
     }
 
     /**

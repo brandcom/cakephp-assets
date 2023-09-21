@@ -433,7 +433,7 @@ class ImageAsset
         unset($modifications['noApi']);
 
         foreach ($modifications as $method => $params) {
-            if (Strings::contains($method, 'filter_')) {
+            if (str_contains($method, 'filter_')) {
                 $filterClassName = Strings::after($method, 'filter_') ?? '';
                 if (!class_exists($filterClassName)) {
                     throw new FilterNotFoundException("Filter {$filterClassName} does not exist. ");
