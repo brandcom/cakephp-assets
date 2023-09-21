@@ -168,8 +168,8 @@ As this package is in early development as a plugin, we don't expect it to fit i
 
 If you have questions or problems with the plugin, open an Issue on GitHub.  
 
-You can also contact me via email:  
-[psc@brandcom.de](mailto:psc@brandcom.de) 
+You can also contact me via email:
+[post@pascalschneider.eu](mailto:post@pascalschneider.eu)
 
 ## Packages this plugin uses
 
@@ -177,7 +177,6 @@ Besides CakePHP, the plugin depends on the following packages:
 ```
 "josegonzalez/cakephp-upload": "^6.0",
 "league/csv": "^9.8",
-"nette/finder": "^2.5",
-"nette/utils": "^3.2",
+"nette/utils": "^3.2 || ^4.0",
 "intervention/image": "^2.7"
 ```
