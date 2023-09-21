@@ -39,6 +39,7 @@
 			"@phpstan",
 			"@psalm"
 		],
+		"test": "phpunit",
 		"stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:~1.9.0 psalm/phar:~5.4.0 && mv composer.backup composer.json",
 		"lowest-setup": "composer update --prefer-lowest --prefer-stable --prefer-dist --no-interaction && cp composer.json composer.backup && composer require --dev dereuromark/composer-prefer-lowest && mv composer.backup composer.json"
 	},

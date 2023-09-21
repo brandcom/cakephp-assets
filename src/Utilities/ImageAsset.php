@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Assets\Utilities;
 
-use App\View\AppView;
 use Assets\Error\FileNotFoundException;
 use Assets\Error\FilterNotFoundException;
 use Assets\Error\UnkownErrorException;
@@ -11,11 +10,14 @@ use Assets\Model\Entity\Asset;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\View\Helper\HtmlHelper;
+use Cake\View\View;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
+use InvalidArgumentException;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Json;
 use Nette\Utils\Strings;
+use SplFileInfo;
 
 /**
  * To be called through Assets::getImage() with MimeType image/*
@@ -79,34 +81,38 @@ class ImageAsset
      * @param array $options - optional:
      * - title (string): for alt-parameter in html-output
      * - quality (int): for jpg compression
-     * @throws \Exception
+     * @throws \InvalidArgumentException when no file was found
      * @return \Assets\Utilities\ImageAsset
      */
     public static function createFromPath(string $path, array $options = [])
     {
-        $absolute_path = null;
-        $img_dir = WWW_ROOT . Configure::read('App.imageBaseUrl');
+        $absolute_path = false;
         if (file_exists($path)) {
             $absolute_path = $path;
-        } elseif (file_exists($img_dir . $path)) {
-            $absolute_path = $img_dir . $path;
+        } else {
+            $img_dir = WWW_ROOT . ltrim((string)Configure::read('App.imageBaseUrl'), DS);
+            if (file_exists($img_dir . $path)) {
+                $absolute_path = $img_dir . $path;
+            }
         }
 
-        if (!$absolute_path) {
-            throw new \Exception("Could not find image with path {$path}.");
+        if ($absolute_path === false || !is_readable($absolute_path)) {
+            throw new InvalidArgumentException("Could not find image with path {$path}.");
         }
 
-        $splFileInfo = new \SplFileInfo($absolute_path);
+        $splFileInfo = new SplFileInfo($absolute_path);
+        $fileMTime = FrozenTime::createFromTimestamp($splFileInfo->getMTime());
 
-        $asset = new Asset();
-        $asset->id = md5($path);
-        $asset->filename = $splFileInfo->getFilename();
-        $asset->directory = ltrim(str_replace(ROOT, '', $splFileInfo->getPath()), DS);
-        $asset->mimetype = mime_content_type($absolute_path) ?: 'unknown';
-        $asset->title = $options['title'] ?? null;
-        $asset->description = null;
-        $asset->modified = FrozenTime::createFromTimestamp($splFileInfo->getMTime());
-        $asset->created = $asset->modified;
+        $asset = new Asset([
+            'id' => md5($path),
+            'filename' => $splFileInfo->getFilename(),
+            'directory' => ltrim(str_replace(ROOT, '', $splFileInfo->getPath()), DS),
+            'mimetype' => mime_content_type($absolute_path) ?: 'unknown',
+            'title' => $options['title'] ?? null,
+            'description' => null,
+            'modified' => $fileMTime,
+            'created' => $fileMTime,
+        ]);
 
         $quality = $options['quality'] ?? 90;
 
@@ -251,7 +257,7 @@ class ImageAsset
     public function getHTML(array $params = []): string
     {
         $path = $this->getPath();
-        $html = new HtmlHelper(new AppView());
+        $html = new HtmlHelper(new View());
 
         if (!$this->image) {
             $manager = $this->getImageManager();
@@ -313,7 +319,7 @@ class ImageAsset
      * @throws \Nette\Utils\JsonException
      * @throws \Assets\Error\FileNotFoundException
      */
-    private function getRelativePath(?\SplFileInfo $file = null): string
+    private function getRelativePath(?SplFileInfo $file = null): string
     {
         if ($file) {
             return $this->outputDirectory . $file->getFilename();
@@ -377,12 +383,12 @@ class ImageAsset
      * @return \SplFileInfo|null
      * @throws \Nette\Utils\JsonException
      */
-    private function getFile(): ?\SplFileInfo
+    private function getFile(): ?SplFileInfo
     {
         $path = WWW_ROOT . ltrim($this->outputDirectory, DS) . $this->getFilename() . '.' . $this->format;
 
         if (file_exists($path)) {
-            return new \SplFileInfo($path);
+            return new SplFileInfo($path);
         }
 
         return null;

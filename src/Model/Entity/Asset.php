@@ -73,7 +73,15 @@ class Asset extends Entity
      */
     protected function _getAbsolutePath(): string
     {
-        return ROOT . DS . $this->directory . DS . $this->filename;
+        $relativeOrAbsolute = DS . ltrim($this->directory . DS . $this->filename, DS);
+        if (is_readable($relativeOrAbsolute)) {
+            return $relativeOrAbsolute;
+        }
+        $path = ROOT . $relativeOrAbsolute;
+        if (is_readable($path)) {
+            return $path;
+        }
+        throw new \Exception('Could not find image file.');
     }
 
     /**
