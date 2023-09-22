@@ -53,6 +53,16 @@ Now you should have an `assets_assets` and an `assets_phinxlog` table in your da
 
 > Having issues? Check out [this demo app](https://github.com/passchn/cakephp-assets-example-app/) or the [single commits](https://github.com/passchn/cakephp-assets-example-app/commits/main) to see how to setup the plugin. 
 
+## CakePHP Version Map
+
+There is no version 1 of this plugin yet. To use it within your project, check the version map: 
+
+| Plugin Version | CakePHP Version | 
+| ---------------| ----------------|
+| dev-cake3      | CakePHP 3.x     |
+| ^0 -> ^0.4     | CakePHP 4.x     |
+| ^0.5           | CakePHP 5.x     |
+
 ## Uploading Files
 
 ### AssetsController
