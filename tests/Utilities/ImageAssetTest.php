@@ -5,6 +5,7 @@ namespace Assets\Test\Utilities;
 
 use Assets\Utilities\ImageAsset;
 use Cake\TestSuite\TestCase;
+use InvalidArgumentException;
 
 class ImageAssetTest extends TestCase
 {
@@ -20,7 +21,7 @@ class ImageAssetTest extends TestCase
 
     public function testCreateFromPathWithInvalidPath(): void
     {
-        static::expectException(\InvalidArgumentException::class);
+        static::expectException(InvalidArgumentException::class);
         $image = ImageAsset::createFromPath('invalid-path');
     }
 

@@ -11,6 +11,7 @@ use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\View\Helper\HtmlHelper;
 use Cake\View\View;
+use Exception;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use InvalidArgumentException;
@@ -84,7 +85,7 @@ class ImageAsset
      * @throws \InvalidArgumentException when no file was found
      * @return \Assets\Utilities\ImageAsset
      */
-    public static function createFromPath(string $path, array $options = [])
+    public static function createFromPath(string $path, array $options = []): ImageAsset
     {
         $absolute_path = false;
         if (file_exists($path)) {
@@ -220,7 +221,7 @@ class ImageAsset
      * @return $this
      * @link https://image.intervention.io/v2
      */
-    public function modify(string $method, ...$params)
+    public function modify(string $method, mixed ...$params)
     {
         $this->trackModification($method, $params);
 
@@ -293,7 +294,7 @@ class ImageAsset
      * It will just be relevant for the ModificationHash.
      * @return void
      */
-    private function trackModification(string $method, $params, bool $noApi = false): void
+    private function trackModification(string $method, mixed $params, bool $noApi = false): void
     {
         if ($noApi) {
             $this->modifications['noApi'][$method] = $params;
@@ -335,7 +336,7 @@ class ImageAsset
             $format = $this->format ?: Strings::after($mimeType, '/');
 
             if (!$format) {
-                throw new \Exception("Cannot read format or mimetype for modified version of Asset #{$this->asset->id}. ");
+                throw new Exception("Cannot read format or mimetype for modified version of Asset #{$this->asset->id}. ");
             }
 
             /**
@@ -407,7 +408,7 @@ class ImageAsset
 
         try {
             $image = $manager->make($this->asset->absolute_path);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new UnkownErrorException("Could not call ImageManager::make on Asset #{$this->asset->id}. Error: {$e->getMessage()}.");
         }
 
