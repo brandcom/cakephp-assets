@@ -28,6 +28,5 @@ class Plugin extends BasePlugin
         }
 
         $app->addPlugin('Josegonzalez/Upload');
-        $app->addPlugin('ViteHelper');
     }
 }
