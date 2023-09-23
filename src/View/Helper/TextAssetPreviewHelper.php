@@ -5,6 +5,9 @@ namespace Assets\View\Helper;
 
 use Assets\Model\Entity\Asset;
 use Cake\View\Helper;
+use Exception;
+use function Cake\Core\h;
+use function Cake\I18n\__d;
 
 /**
  * AssetContent helper
@@ -36,7 +39,7 @@ class TextAssetPreviewHelper extends Helper
                 default:
                     return $this->printFormatted($asset);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return __d('assets', "Error at TextAssetPreviewHelper: The Asset #{0}'s " .
             'file with the filetype {1} is not readable.', $asset->id, $asset->filetype);
         }

@@ -8,7 +8,7 @@ use Assets\Error\FilterNotFoundException;
 use Assets\Error\UnkownErrorException;
 use Assets\Model\Entity\Asset;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\View\Helper\HtmlHelper;
 use Cake\View\View;
 use Exception;
@@ -83,9 +83,9 @@ class ImageAsset
      * - title (string): for alt-parameter in html-output
      * - quality (int): for jpg compression
      * @throws \InvalidArgumentException when no file was found
-     * @return \Assets\Utilities\ImageAsset
+     * @return self
      */
-    public static function createFromPath(string $path, array $options = []): ImageAsset
+    public static function createFromPath(string $path, array $options = []): self
     {
         $absolute_path = false;
         if (file_exists($path)) {
@@ -102,7 +102,7 @@ class ImageAsset
         }
 
         $splFileInfo = new SplFileInfo($absolute_path);
-        $fileMTime = FrozenTime::createFromTimestamp($splFileInfo->getMTime());
+        $fileMTime = DateTime::createFromTimestamp($splFileInfo->getMTime());
 
         $asset = new Asset([
             'id' => md5($path),

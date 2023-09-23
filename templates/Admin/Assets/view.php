@@ -3,14 +3,22 @@
  * @var \App\View\AppView $this
  * @var \Assets\Model\Entity\AssetsAsset $asset
  */
+
+use Assets\Enum\ImageSizes;
+use function Cake\Core\h;
+use function Cake\I18n\__d;
+
 ?>
 <div class="row">
     <aside class="column">
         <div class="side-nav">
             <h4 class="heading"><?= __d('assets', 'Actions') ?></h4>
             <?= $this->Html->link(__d('assets', 'Edit Asset'), ['action' => 'edit', $asset->id], ['class' => 'side-nav-item']) ?>
-            <?= $this->Form->postLink(__d('assets', 'Delete Asset'), ['action' => 'delete', $asset->id],
-                ['confirm' => __d('assets', 'Are you sure you want to delete # {0}?', $asset->id), 'class' => 'side-nav-item']) ?>
+            <?= $this->Form->postLink(
+                __d('assets', 'Delete Asset'),
+                ['action' => 'delete', $asset->id],
+                ['confirm' => __d('assets', 'Are you sure you want to delete # {0}?', $asset->id), 'class' => 'side-nav-item']
+            ) ?>
             <?= $this->Html->link(__d('assets', 'List Assets'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
             <?= $this->Html->link(__d('assets', 'New Asset'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
         </div>
@@ -18,9 +26,9 @@
     <div class="column-responsive column-80">
         <div class="assets view content">
             <h3><?= h($asset->title) ?></h3>
-            <?php if ($asset->isImage()): ?>
+            <?php if ($asset->isImage()) : ?>
                 <p>
-                    <?= $asset->getImage(65)->scaleWidth(\Assets\Enum\ImageSizes::SM)->toJpg() ?>
+                    <?= $asset->getImage(65)->scaleWidth(ImageSizes::SM)->toJpg() ?>
                 </p>
             <?php endif; ?>
             <table>
@@ -67,7 +75,7 @@
                     <?= h($asset->description); ?>
                 </blockquote>
             </div>
-            <?php if ($asset->isPlainText()): ?>
+            <?php if ($asset->isPlainText()) : ?>
                 <div class="text">
                     <strong><?= __d('assets', 'Content') ?></strong>
                     <div>

@@ -3,6 +3,9 @@
  * @var \App\View\AppView $this
  * @var \Assets\Model\Entity\AssetsAsset[]|\Cake\Collection\CollectionInterface $assets
  */
+
+use function Cake\Core\h;
+
 ?>
 <div class="assets index content">
     <?= $this->Html->link(__d('assets', 'New Asset'), ['action' => 'add'], ['class' => 'button float-right']) ?>

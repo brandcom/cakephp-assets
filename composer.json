@@ -15,7 +15,7 @@
 	"require-dev": {
 		"cakedc/cakephp-phpstan": "3.next-cake5-dev",
 		"cakephp/cakephp-codesniffer": "^5.1",
-		"phpunit/phpunit": "^10.0"
+		"phpunit/phpunit": "^10.1"
 	},
 	"autoload": {
 		"psr-4": {
@@ -30,16 +30,18 @@
 		}
 	},
 	"scripts": {
-		"cs-check": "phpcs --colors --parallel=16 -p src/",
-		"cs-fix": "phpcbf --colors --parallel=16 -p src/",
-		"phpstan": "phpstan.phar analyse",
-		"psalm": "psalm.phar --show-info=false",
+		"cs-check": "phpcs --colors --parallel=16 -p src/ tests/",
+		"cs-fix": "phpcbf --colors --parallel=16 -p src/ tests/",
+		"phpstan": "tools/phpstan analyse",
+		"psalm": "tools/psalm --show-info=false",
 		"stan": [
 			"@phpstan",
 			"@psalm"
 		],
+		"stan-baseline": "tools/phpstan --generate-baseline",
+		"psalm-baseline": "tools/psalm --set-baseline=psalm-baseline.xml",
 		"test": "phpunit",
-		"stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:~1.9.0 psalm/phar:~5.4.0 && mv composer.backup composer.json",
+		"stan-setup": "phive install",
 		"lowest-setup": "composer update --prefer-lowest --prefer-stable --prefer-dist --no-interaction && cp composer.json composer.backup && composer require --dev dereuromark/composer-prefer-lowest && mv composer.backup composer.json"
 	},
 	"config": {

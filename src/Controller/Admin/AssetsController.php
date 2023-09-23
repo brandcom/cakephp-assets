@@ -6,20 +6,21 @@ namespace Assets\Controller\Admin;
 use Assets\Controller\AppController;
 use Cake\Http\CallbackStream;
 use Cake\Http\Response;
+use function Cake\I18n\__d;
 
 /**
  * Assets Controller
  *
- * @method \Cake\ORM\Entity[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method \Cake\Datasource\Paging\PaginatedInterface<\Assets\Model\Entity\Asset[]> paginate($object = null, array $settings = [])
  */
 class AssetsController extends AppController
 {
     /**
      * Index method
      *
-     * @return \Cake\Http\Response|null|void Renders view
+     * @return void Renders view
      */
-    public function index()
+    public function index(): void
     {
         $assets = $this->paginate($this->Assets);
 
@@ -30,10 +31,10 @@ class AssetsController extends AppController
      * View method
      *
      * @param string|null $id Asset id.
-     * @return \Cake\Http\Response|null|void Renders view
+     * @return void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view(?string $id = null): void
     {
         $asset = $this->Assets->get($id, [
             'contain' => [],
@@ -45,9 +46,9 @@ class AssetsController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
+     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add(): ?Response
     {
         $asset = $this->Assets->newEmptyEntity();
         if ($this->getRequest()->is('post')) {
@@ -60,16 +61,18 @@ class AssetsController extends AppController
             $this->Flash->error(__d('assets', 'The asset could not be saved. Please, try again.'));
         }
         $this->set(compact('asset'));
+
+        return $this->render();
     }
 
     /**
      * Edit method
      *
      * @param string|null $id Asset id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
+     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit(?string $id = null): ?Response
     {
         $asset = $this->Assets->get($id, [
             'contain' => [],
@@ -84,16 +87,18 @@ class AssetsController extends AppController
             $this->Flash->error(__d('assets', 'The asset could not be saved. Please, try again.'));
         }
         $this->set(compact('asset'));
+
+        return $this->render();
     }
 
     /**
      * Delete method
      *
      * @param string|null $id Asset id.
-     * @return \Cake\Http\Response|null|void Redirects to index.
+     * @return \Cake\Http\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete(?string $id = null): ?Response
     {
         $this->getRequest()->allowMethod(['post', 'delete']);
         $asset = $this->Assets->get($id);
@@ -110,9 +115,9 @@ class AssetsController extends AppController
      * Add ?download=1 to URL to download instead of view the file.
      *
      * @param string $id The ID of the asset
-     * @return \Cake\Http\Response
+     * @return \Cake\Http\Response|null
      */
-    public function download(string $id): Response
+    public function download(string $id): ?Response
     {
         $asset = $this->Assets->get($id);
         $is_download = (bool)$this->getRequest()->getQuery('download');
@@ -122,7 +127,7 @@ class AssetsController extends AppController
         });
 
         $response = $this->getResponse()
-            ->withType($asset->mimetype)
+            ->withType($asset->mimetype ?? 'jpg')
             ->withDisabledCache()
             ->withBody($stream);
 

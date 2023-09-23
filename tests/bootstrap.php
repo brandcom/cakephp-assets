@@ -12,13 +12,6 @@ declare(strict_types=1);
  * @license       https://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-use Cake\Cache\Cache;
-use Cake\Core\Configure;
-use Cake\Datasource\ConnectionManager;
-use Cake\Routing\Router;
-use Cake\TestSuite\Fixture\SchemaLoader;
-use function Cake\Core\env;
-
 $findRoot = function ($root) {
     do {
         $lastRoot = $root;
@@ -32,86 +25,4 @@ $findRoot = function ($root) {
 $root = $findRoot(__FILE__);
 unset($findRoot);
 chdir($root);
-
-require_once 'vendor/autoload.php';
-
-if (!defined('DS')) {
-    define('DS', DIRECTORY_SEPARATOR);
-}
-define('CORE_PATH', $root . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS);
-define('ROOT', $root . DS . 'tests' . DS . 'test_app');
-define('APP_DIR', 'App');
-define('APP', ROOT . DS . 'App' . DS);
-define('TMP', sys_get_temp_dir() . DS . 'passchn-cakephp-assets' . DS);
-define('CACHE', TMP . DS . 'cache' . DS);
-if (!defined('CONFIG')) {
-    define('CONFIG', ROOT . DS . 'config' . DS);
-}
-
-// phpcs:disable
-@mkdir(CACHE);
-// phpcs:enable
-
-Configure::write('debug', true);
-Configure::write('App', [
-    'namespace' => 'TestApp',
-    'encoding' => 'UTF-8',
-    'paths' => [
-        'plugins' => [ROOT . DS . 'Plugin' . DS],
-        'templates' => [ROOT . DS . 'App' . DS . 'Template' . DS],
-    ],
-]);
-
-Cache::setConfig([
-    '_cake_core_' => [
-        'engine' => 'File',
-        'prefix' => 'cake_core_',
-        'serialize' => true,
-    ],
-    '_cake_model_' => [
-        'engine' => 'File',
-        'prefix' => 'cake_model_',
-        'serialize' => true,
-        'path' => TMP,
-    ],
-]);
-
-// Store initial state
-Router::reload();
-
-if (!getenv('DB_URL')) {
-    putenv('DB_URL=sqlite://127.0.0.1/cakephp_test');
-    putenv('DB_URL_SNAPSHOT=sqlite://127.0.0.1/cakephp_snapshot');
-}
-if (!getenv('DB')) {
-    $dsn = getenv('DB_URL');
-    $db = 'sqlite';
-    if (preg_match('#^(.+)://#', $dsn, $matches)) {
-        $db = $matches[1];
-    }
-    if ($db === 'postgres') {
-        $db = 'pgsql';
-    }
-    putenv('DB=' . $db);
-}
-ConnectionManager::setConfig('test', [
-    'cacheMetadata' => false,
-    'url' => getenv('DB_URL'),
-]);
-ConnectionManager::setConfig('test_snapshot', [
-    'cacheMetadata' => false,
-    'url' => getenv('DB_URL_SNAPSHOT'),
-]);
-
-if (getenv('DB_URL_COMPARE') !== false) {
-    ConnectionManager::setConfig('test_comparisons', [
-        'cacheMetadata' => false,
-        'url' => getenv('DB_URL_COMPARE'),
-    ]);
-}
-
-// Create test database schema
-if (env('FIXTURE_SCHEMA_METADATA')) {
-    $loader = new SchemaLoader();
-    $loader->loadInternalFile(env('FIXTURE_SCHEMA_METADATA'), 'test');
-}
+require $root . '/vendor/cakephp/cakephp/tests/bootstrap.php';
