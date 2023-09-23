@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.x-dev@">
+<files psalm-version="5.14.1@b9d355e0829c397b9b3b47d0c0ed042a8a70284d">
   <file src="src/Controller/Admin/AssetsController.php">
-    <MissingDependency occurrences="1">
-      <code>AppController</code>
-    </MissingDependency>
+    <InternalClass>
+      <code><![CDATA[new CallbackStream(function () use ($asset) {
+            return $asset->read();
+        })]]></code>
+    </InternalClass>
+    <TooManyTemplateParams>
+      <code><![CDATA[$this->paginate($this->Assets)]]></code>
+    </TooManyTemplateParams>
   </file>
   <file src="src/Controller/AppController.php">
-    <UndefinedClass occurrences="1">
-      <code>BaseController</code>
-    </UndefinedClass>
-  </file>
-  <file src="src/Model/Entity/Asset.php">
-    <NonInvariantDocblockPropertyType occurrences="1">
-      <code>$_accessible</code>
-    </NonInvariantDocblockPropertyType>
-    <PossiblyNullReference occurrences="1">
-      <code>toDateTimeString</code>
-    </PossiblyNullReference>
+    <PropertyTypeCoercion>
+      <code><![CDATA[$this->fetchTable('Assets.Assets')]]></code>
+    </PropertyTypeCoercion>
   </file>
 </files>

@@ -3,6 +3,9 @@
  * @var \App\View\AppView $this
  * @var \Assets\Model\Entity\AssetsAsset $asset
  */
+
+use function Cake\I18n\__d;
+
 ?>
 <div class="row">
     <aside class="column">

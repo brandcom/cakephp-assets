@@ -3,17 +3,15 @@ declare(strict_types=1);
 
 namespace Assets\Controller;
 
-use App\Controller\AppController as BaseController;
+use Assets\Model\Table\AssetsTable;
+use Cake\Controller\Controller as BaseController;
 
-/**
- * @mixin \Cake\Controller\Controller
- */
 class AppController extends BaseController
 {
     /**
      * @var \Assets\Model\Table\AssetsTable
      */
-    public $Assets;
+    public AssetsTable $Assets;
 
     /**
      * Initialize the Assets table object

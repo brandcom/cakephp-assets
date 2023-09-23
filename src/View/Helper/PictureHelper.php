@@ -32,7 +32,7 @@ class PictureHelper extends Helper
      * Returns a html picture element with a webp and jpeg source, and a fallback img element.
      *
      * @param \Assets\Utilities\ImageAsset|\Assets\Model\Entity\Asset|string|null $image The Asset object, ImageAsset or a path to a static file
-     * @param int[] $widths Array of width which will be present in the SrcSet
+     * @param array<int> $widths Array of width which will be present in the SrcSet
      * @param array $params see info below
      * @return string|null
      * @throws \Exception
@@ -49,7 +49,7 @@ class PictureHelper extends Helper
      * 'filename' overrides the automatically generated name of the rendered file, based on the modifications.
      * It is recommended to leave this empty.
      */
-    public function webp($image, array $widths = [300, 500], array $params = []): ?string
+    public function webp(ImageAsset|Asset|string|null $image, array $widths = [300, 500], array $params = []): ?string
     {
         if (!$image) {
             return null;

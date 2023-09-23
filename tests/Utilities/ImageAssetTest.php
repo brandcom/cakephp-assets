@@ -11,18 +11,10 @@ class ImageAssetTest extends TestCase
 {
     protected const DATA_IMAGES = __DIR__ . DS;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        if (!defined('PLUGIN_ROOT')) {
-            include __DIR__ . DS . '..' . DS . 'bootstrap.php';
-        }
-    }
-
     public function testCreateFromPathWithInvalidPath(): void
     {
         static::expectException(InvalidArgumentException::class);
-        $image = ImageAsset::createFromPath('invalid-path');
+        ImageAsset::createFromPath('invalid-path');
     }
 
     public function testCreateFromPathWithValidPath(): void

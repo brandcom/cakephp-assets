@@ -9,3 +9,4 @@
 /node_modules
 webroot/modified
 .phpunit.cache/test-results
+/tools

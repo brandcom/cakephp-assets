@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Assets\Model\Table;
 
+use ArrayObject;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
@@ -18,16 +19,16 @@ use Laminas\Diactoros\UploadedFile;
  * @method \Assets\Model\Entity\Asset newEmptyEntity()
  * @method \Assets\Model\Entity\Asset newEntity(array $data, array $options = [])
  * @method \Assets\Model\Entity\Asset[] newEntities(array $data, array $options = [])
- * @method \Assets\Model\Entity\Asset get($primaryKey, $options = [])
+ * @method \Assets\Model\Entity\Asset get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Assets\Model\Entity\Asset findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Assets\Model\Entity\Asset patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Assets\Model\Entity\Asset[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Assets\Model\Entity\Asset|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Assets\Model\Entity\Asset saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Assets\Model\Entity\Asset[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Assets\Model\Entity\Asset[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Assets\Model\Entity\Asset[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Assets\Model\Entity\Asset[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Assets\Model\Entity\Asset[]|false saveMany(iterable $entities, $options = [])
+ * @method \Assets\Model\Entity\Asset[] saveManyOrFail(iterable $entities, $options = [])
+ * @method \Assets\Model\Entity\Asset[]|false deleteMany(iterable $entities, $options = [])
+ * @method \Assets\Model\Entity\Asset[] deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AssetsTable extends Table
@@ -120,11 +121,11 @@ class AssetsTable extends Table
 
     /**
      * @param \Cake\Event\EventInterface $e The event
-     * @param SelectQuery $query The query associated to the event
+     * @param \Cake\ORM\Query\SelectQuery $query The query associated to the event
      * @param \ArrayObject $options Options passed to the event
-     * @return SelectQuery
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function beforeFind(EventInterface $e, SelectQuery $query, \ArrayObject $options): SelectQuery
+    public function beforeFind(EventInterface $e, SelectQuery $query, ArrayObject $options): SelectQuery
     {
         return $query->orderByDesc('modified');
     }
@@ -149,7 +150,7 @@ class AssetsTable extends Table
      * @link https://book.cakephp.org/4/en/orm/behaviors.html
      * @return void
      */
-    private function addCustomBehaviors()
+    private function addCustomBehaviors(): void
     {
         $customBehaviors = Configure::read('AssetsPlugin.AssetsTable.Behaviors', []);
         foreach ($customBehaviors as $behavior) {

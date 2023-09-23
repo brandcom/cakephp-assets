@@ -10,9 +10,11 @@ use Assets\Utilities\ImageAsset;
 use Cake\Core\Configure;
 use Cake\ORM\Entity;
 use Cake\Routing\Router;
+use Exception;
 use League\Csv\Reader;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Strings;
+use function Cake\I18n\__d;
 
 /**
  * Asset Entity
@@ -195,7 +197,7 @@ class Asset extends Entity
                 $thumbnail = $this->getImage(65)->scaleWidth($size)->setCSS('asset-thumbnail')->toJpg();
 
                 return $html ? $thumbnail->getHTML() : $thumbnail->getPath();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 return __d('assets', 'Cannot get ImageAsset.');
             }
         }
@@ -313,7 +315,7 @@ class Asset extends Entity
 
         $prefix = null;
         if (empty($config['no_prefix'])) {
-            $prefix = Strings::substring(md5($this->modified->toDateTimeString()), 0, 3) . '-';
+            $prefix = Strings::substring(md5($this->modified?->toDateTimeString() ?? ''), 0, 3) . '-';
         }
 
         $path = str_replace(WWW_ROOT, '', $path);
