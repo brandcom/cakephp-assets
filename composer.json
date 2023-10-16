@@ -8,12 +8,12 @@
 		"ext-fileinfo": "*",
 		"cakephp/cakephp": "^5.0.0",
 		"intervention/image": "^2.7.2",
-		"josegonzalez/cakephp-upload": "cake-5-dev",
+		"josegonzalez/cakephp-upload": "^8.0",
 		"league/csv": "^9.8",
 		"nette/utils": "^3.2 || ^4.0.0"
 	},
 	"require-dev": {
-		"cakedc/cakephp-phpstan": "3.next-cake5-dev",
+		"cakedc/cakephp-phpstan": "^3.0",
 		"cakephp/cakephp-codesniffer": "^5.1",
 		"phpunit/phpunit": "^10.1"
 	},
@@ -50,6 +50,5 @@
 			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
 	},
-	"minimum-stability": "dev",
 	"prefer-stable": true
 }
