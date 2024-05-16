@@ -15,6 +15,7 @@ return [
             'assetsDir' => 'resources' . DS . 'assets' . DS,
             'displayField' => 'title',
             'Behaviors' => [],
+			'deleteFile' => false,
         ],
         'ImageAsset' => [
             // driver can be 'imagick' or 'gd'
