@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Assets\Model\Table;
 
 use ArrayObject;
+use Assets\Model\Entity\Asset;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
@@ -12,6 +13,7 @@ use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Laminas\Diactoros\UploadedFile;
+use Nette\Utils\FileSystem;
 
 /**
  * Assets Model
@@ -129,6 +131,15 @@ class AssetsTable extends Table
     {
         return $query->orderByDesc('modified');
     }
+
+	public function afterDelete(EventInterface $e, Asset $entity, ArrayObject $options): bool
+	{
+		if (Configure::read('AssetsPlugin.AssetsTable.deleteFile') === true) {
+			FileSystem::delete($entity->absolute_path);
+		}
+
+		return true;
+	}
 
     /**
      * @return string
