@@ -7,7 +7,7 @@
 		"php": ">=8.2",
 		"ext-fileinfo": "*",
 		"cakephp/cakephp": "^5.1",
-		"intervention/image": "^3.11",
+		"intervention/image": "^2 || ^3",
 		"josegonzalez/cakephp-upload": "^8",
 		"league/csv": "^9.8",
 		"nette/utils": "^3.2 || ^4.0.0"

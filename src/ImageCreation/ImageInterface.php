@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Assets\ImageCreation;
 
 use Assets\Error\ModificationFailedException;
-use Intervention\Image\Interfaces as Intervention;
 use RuntimeException;
 
 interface ImageInterface
@@ -24,10 +23,14 @@ interface ImageInterface
      */
     public function modify(string $modifier, array $params): self;
 
-    public function getInterventionImage(): ?Intervention\ImageInterface;
+    /**
+     * @return \Intervention\Image\Interfaces\ImageInterface|\Intervention\Image\Image|null
+     */
+    public function getInterventionImage(): ?object;
 
     /**
+     * @return \Intervention\Image\Interfaces\ImageInterface|\Intervention\Image\Image
      * @throws RuntimeException
      */
-    public function requireInterventionImage(): Intervention\ImageInterface;
+    public function requireInterventionImage(): object;
 }

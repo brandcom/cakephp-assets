@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Assets\ImageCreation\Intervention;
+namespace Assets\ImageCreation\LegacyV2Intervention;
 
 use Assets\Error\InvalidArgumentException;
 use Assets\Error\ModificationFailedException;
 use Assets\ImageCreation\ImageInterface;
+use Intervention\Image\Image;
 use Intervention\Image\MediaType;
 use Intervention\Image\Interfaces as Intervention;
 use Nette\Utils\FileSystem;
@@ -17,7 +18,7 @@ final class InterventionImageFacade implements ImageInterface
      * @param array<string, string|callable> $legacyMdifiersMap
      */
     public function __construct(
-        private Intervention\ImageInterface $interventionImage,
+        private Image $interventionImage,
         private array                       $legacyMdifiersMap,
     ) {
     }
