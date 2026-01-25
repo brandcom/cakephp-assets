@@ -4,23 +4,17 @@ declare(strict_types=1);
 
 namespace Assets\ImageCreation\LegacyV2Intervention;
 
-use Assets\Error\InvalidArgumentException;
 use Assets\Error\ModificationFailedException;
 use Assets\ImageCreation\ImageInterface;
 use Intervention\Image\Image;
 use Intervention\Image\MediaType;
-use Intervention\Image\Interfaces as Intervention;
 use Nette\Utils\FileSystem;
 
 final class InterventionImageFacade implements ImageInterface
 {
-    /**
-     * @param array<string, string|callable> $legacyMdifiersMap
-     */
     public function __construct(
         private Image $interventionImage,
-        private array                       $legacyMdifiersMap,
-    ) {
+    )  {
     }
 
     public function width(): int
@@ -62,55 +56,30 @@ final class InterventionImageFacade implements ImageInterface
             throw new ModificationFailedException('Empty params given');
         }
 
-        $modify = function (string $modifier, array $params, ?string $legacyModifier = null) {
-            try {
+        try {
+            if (method_exists($this->interventionImage, $modifier)) {
                 $this->interventionImage->{$modifier}(...$params);
-            } catch (\Throwable $throwable) {
-
-                if ($legacyModifier === null) {
-                    $callback = $this->legacyMdifiersMap[$modifier] ?? null;
-                    if ($callback !== null && is_callable($callback)) {
-                        $callback($this->interventionImage, ...$params);
-                        return $this->interventionImage;
-                    }
-                }
-
-                throw new ModificationFailedException(
-                    sprintf(
-                        'Modification `%s` failed with params: %s.%s',
-                        $modifier,
-                        var_export($params, true),
-                        $legacyModifier !== null ? ' Legacy: ' . $legacyModifier : '',
-                    ),
-                    previous: $throwable,
-                );
             }
-        };
-
-        if (method_exists($this->interventionImage, $modifier)) {
-            $modify($modifier, $params);
-            return $this;
-        }
-
-        $mappedFromLegacy = $this->legacyMdifiersMap[$modifier] ?? null;
-
-        if (
-            $mappedFromLegacy !== null
-            && method_exists($this->interventionImage, $mappedFromLegacy)
-        ) {
-            $modify($mappedFromLegacy, $params, $modifier);
-            return $this;
+        } catch (\Throwable $throwable) {
+            throw new ModificationFailedException(
+                sprintf(
+                    'Modification `%s` failed with params: %s.',
+                    $modifier,
+                    var_export($params, true),
+                ),
+                previous: $throwable,
+            );
         }
 
         throw new ModificationFailedException(sprintf('Modifier `%s` does not exist', $modifier));
     }
 
-    public function getInterventionImage(): Intervention\ImageInterface
+    public function getInterventionImage(): Image
     {
-        return $this->requireInterventionImage();
+        return $this->interventionImage;
     }
 
-    public function requireInterventionImage(): Intervention\ImageInterface
+    public function requireInterventionImage(): Image
     {
         return $this->interventionImage;
     }

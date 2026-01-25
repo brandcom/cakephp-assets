@@ -45,10 +45,7 @@ final class ImageManagerLocator
     {
         $driver = Configure::read('AssetsPlugin.ImageAsset.driver', 'gd');
 
-        return new V2\InterventionImageManagerFacade(
-            new ImageManager(['driver' => $driver]),
-            [],
-        );
+        return new V2\InterventionImageManagerFacade(new ImageManager(['driver' => $driver]));
     }
 
     private static function createV3ManagerFacade(): ImageManagerInterface
