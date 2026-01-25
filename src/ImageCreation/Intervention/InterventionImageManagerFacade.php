@@ -26,4 +26,17 @@ final class InterventionImageManagerFacade implements ImageManagerInterface
             $this->legacyModifiersMap,
         );
     }
+
+    public function create(int $width, int $height): ImageInterface
+    {
+        return new InterventionImageFacade(
+            $this->interventionImageManager->create($width, $height),
+            $this->legacyModifiersMap,
+        );
+    }
+
+    public function canvas(int $width, int $height): ImageInterface
+    {
+        return $this->create($width, $height);
+    }
 }

@@ -458,8 +458,7 @@ final class ImageAsset
                     );
                 }
 
-                $filter = new $filterClassName($manager, ...$params);
-                $image = $filter->applyFilter($image);
+                $image = $filterClassName::create($manager, ...$params)->applyFilter($image);
                 continue;
             }
 
