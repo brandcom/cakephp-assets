@@ -104,4 +104,14 @@ final class InterventionImageFacade implements ImageInterface
 
         throw new ModificationFailedException(sprintf('Modifier `%s` does not exist', $modifier));
     }
+
+    public function getInterventionImage(): Intervention\ImageInterface
+    {
+        return $this->requireInterventionImage();
+    }
+
+    public function requireInterventionImage(): Intervention\ImageInterface
+    {
+        return $this->interventionImage;
+    }
 }
