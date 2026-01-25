@@ -464,7 +464,7 @@ final class ImageAsset
             }
 
             $params = is_array($params) ? $params : [$params];
-            $image->{$method}(...$params);
+            $image->modify($method, $params);
         }
 
         return $image;

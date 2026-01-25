@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Assets\ImageCreation;
 
 use Assets\ImageCreation\Intervention\InterventionImageManagerFacade;
+use Assets\ImageCreation\Intervention\LegacySupport;
 use Cake\Core\Configure;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
@@ -21,22 +22,24 @@ final class ImageManagerLocator
         }
 
         $driver = Configure::read('AssetsPlugin.ImageAsset.driver', 'gd');
+        $legacyModifiersMap = Configure::read('AssetsPlugin.ImageAsset.legacyModifiersMap');
 
-        $manager = self::$manager = new InterventionImageManagerFacade(
+        return self::$manager = new InterventionImageManagerFacade(
             match ($driver) {
                 'imagick',
                 ImagickDriver::class => ImageManager::imagick(
-                    options: Configure::read('AssetsPlugin.ImageAsset.imagickOptions', []),
+                    ...Configure::read('AssetsPlugin.ImageAsset.imagickOptions', []),
                 ),
                 'gd',
                 GdDriver::class => ImageManager::gd(
-                    options: Configure::read('AssetsPlugin.ImageAsset.gdOptions', []),
+                    ...Configure::read('AssetsPlugin.ImageAsset.gdOptions', []),
                 ),
                 default => throw new \LogicException('no driver configured'),
             },
+            legacyModifiersMap: $legacyModifiersMap !== null
+                ? $legacyModifiersMap
+                : LegacySupport::V2_TO_V3_MODIFIERS_MAP,
         );
-
-        return $manager;
     }
 
     public static function setImageManager(ImageManagerInterface $manager): void

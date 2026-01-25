@@ -13,4 +13,9 @@ interface ImageInterface
     public function mime(): string;
 
     public function save(string $absolutePath, ?int $quality, ?string $format): void;
+
+    /**
+     * Modify the image based on the underlying implementation.
+     */
+    public function modify(string $modifier, array $params): self;
 }

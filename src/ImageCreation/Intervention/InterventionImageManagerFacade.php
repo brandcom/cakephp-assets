@@ -10,8 +10,12 @@ use Intervention\Image\Interfaces as Intervention;
 
 final class InterventionImageManagerFacade implements ImageManagerInterface
 {
+    /**
+     * @param array<string, string> $legacyModifiersMap
+     */
     public function __construct(
         private Intervention\ImageManagerInterface $interventionImageManager,
+        private array $legacyModifiersMap,
     ) {
     }
 
@@ -19,6 +23,7 @@ final class InterventionImageManagerFacade implements ImageManagerInterface
     {
         return new InterventionImageFacade(
             $this->interventionImageManager->read($absolutePath),
+            $this->legacyModifiersMap,
         );
     }
 }
