@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Assets\ImageCreation;
 
+use Assets\Error\ModificationFailedException;
+
 interface ImageInterface
 {
     public function width(): int;
@@ -16,6 +18,7 @@ interface ImageInterface
 
     /**
      * Modify the image based on the underlying implementation.
+     * @throws ModificationFailedException
      */
     public function modify(string $modifier, array $params): self;
 }

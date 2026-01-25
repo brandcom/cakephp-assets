@@ -11,7 +11,7 @@ use Intervention\Image\Interfaces as Intervention;
 final class InterventionImageManagerFacade implements ImageManagerInterface
 {
     /**
-     * @param array<string, string> $legacyModifiersMap
+     * @param array<string, string|callable> $legacyModifiersMap
      */
     public function __construct(
         private Intervention\ImageManagerInterface $interventionImageManager,
