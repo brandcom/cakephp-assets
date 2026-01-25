@@ -207,7 +207,8 @@ final class ImageAsset
         if (!is_a($filter, FilterInterface::class, allow_string: true)) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'Argument $filter of type `%s` does not implement `%s`.',
+                    'Argument $filter (`%s`) of type `%s` does not implement `%s`.',
+                    \Cake\Core\h($filter),
                     get_debug_type($filter),
                     FilterInterface::class,
                 ),
