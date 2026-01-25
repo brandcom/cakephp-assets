@@ -6,14 +6,16 @@ namespace Assets\Utilities;
 use Assets\Error\FileNotFoundException;
 use Assets\Error\FilterNotFoundException;
 use Assets\Error\UnkownErrorException;
+use Assets\ImageCreation\FilterInterface;
+use Assets\ImageCreation\ImageInterface;
+use Assets\ImageCreation\ImageManagerInterface;
+use Assets\ImageCreation\ImageManagerLocator;
 use Assets\Model\Entity\Asset;
 use Cake\Core\Configure;
 use Cake\I18n\DateTime;
 use Cake\View\Helper\HtmlHelper;
 use Cake\View\View;
 use Exception;
-use Intervention\Image\Image;
-use Intervention\Image\ImageManager;
 use InvalidArgumentException;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Json;
@@ -29,7 +31,7 @@ use SplFileInfo;
  *
  * To just get a public path from /webroot, call getPath()
  */
-class ImageAsset
+final class ImageAsset
 {
     private Asset $asset;
 
@@ -41,11 +43,11 @@ class ImageAsset
 
     private array $modifications;
 
-    private ?Image $image;
+    private ?ImageInterface $image = null;
 
     private ?string $format;
 
-    private ?string $filename;
+    private ?string $filename = null;
 
     private string $css;
 
@@ -62,7 +64,6 @@ class ImageAsset
         $this->asset = $asset;
         $this->quality = $quality;
         $this->modifications = [];
-        $this->image = null;
         $this->format = $this->asset->filetype;
         $this->filename = null;
         $this->lazyLoading = true;
@@ -82,8 +83,8 @@ class ImageAsset
      * @param array $options - optional:
      * - title (string): for alt-parameter in html-output
      * - quality (int): for jpg compression
-     * @throws \InvalidArgumentException when no file was found
      * @return self
+     * @throws InvalidArgumentException when no file was found
      */
     public static function createFromPath(string $path, array $options = []): self
     {
@@ -117,7 +118,7 @@ class ImageAsset
 
         $quality = $options['quality'] ?? 90;
 
-        return new ImageAsset($asset, (int)$quality);
+        return new self($asset, (int)$quality);
     }
 
     /**
@@ -127,7 +128,7 @@ class ImageAsset
      * @param int $width Width in px
      * @return $this
      */
-    public function scaleWidth(int $width)
+    public function scaleWidth(int $width): self
     {
         $this->trackModification('widen', [$width]);
 
@@ -137,7 +138,7 @@ class ImageAsset
     /**
      * @return $this
      */
-    public function toWebp()
+    public function toWebp(): self
     {
         $this->trackModification('encode', ['webp']);
         $this->format = 'webp';
@@ -148,7 +149,7 @@ class ImageAsset
     /**
      * @return $this
      */
-    public function toJpg()
+    public function toJpg(): self
     {
         $this->trackModification('encode', ['jpg']);
         $this->format = 'jpg';
@@ -162,7 +163,7 @@ class ImageAsset
      * @param string $css HTML class which will be added on render
      * @return $this
      */
-    public function setCSS(string $css)
+    public function setCSS(string $css): self
     {
         $this->css = $css;
 
@@ -173,7 +174,7 @@ class ImageAsset
      * @param bool $lazyLoading Control if the image shall be loaded lazily when rendered as Html
      * @return $this
      */
-    public function setLazyLoading(bool $lazyLoading = true)
+    public function setLazyLoading(bool $lazyLoading = true): self
     {
         $this->lazyLoading = $lazyLoading;
 
@@ -189,7 +190,7 @@ class ImageAsset
      * @param string|null $filename the custom filename
      * @return $this
      */
-    public function setFilename(?string $filename)
+    public function setFilename(?string $filename): self
     {
         $this->filename = $filename;
 
@@ -197,16 +198,23 @@ class ImageAsset
     }
 
     /**
-     * e.g.
-     * ImageAsset::applyFilter(EpaperFilter::class, ['kombi'])
-     * !! Don't pass an ImageManager instance, only string or int properties.
-     *
      * @param string $filter ClassName of the Filter
-     * @param array $properties Will be passed after the ImageManager instance when calling the Filter's constructor.
+     * @param array $properties Will be passed to the Filter's constructor
      * @return $this
      */
-    public function applyFilter(string $filter, array $properties = [])
+    public function applyFilter(string $filter, array $properties = []): self
     {
+        if (!is_a($filter, FilterInterface::class, allow_string: true)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Argument $filter (`%s`) of type `%s` does not implement `%s`.',
+                    \Cake\Core\h($filter),
+                    get_debug_type($filter),
+                    FilterInterface::class,
+                ),
+            );
+        }
+
         $this->trackModification('filter_' . $filter, $properties);
 
         return $this;
@@ -221,7 +229,7 @@ class ImageAsset
      * @return $this
      * @link https://image.intervention.io/v2
      */
-    public function modify(string $method, mixed ...$params)
+    public function modify(string $method, mixed ...$params): self
     {
         $this->trackModification($method, $params);
 
@@ -262,7 +270,7 @@ class ImageAsset
 
         if (!$this->image) {
             $manager = $this->getImageManager();
-            $this->image = $manager->make($this->getAbsolutePath());
+            $this->image = $manager->read($this->getAbsolutePath());
         }
 
         $default_params = [
@@ -407,7 +415,7 @@ class ImageAsset
         $manager = $this->getImageManager();
 
         try {
-            $image = $manager->make($this->asset->absolute_path);
+            $image = $manager->read($this->asset->absolute_path);
         } catch (Exception $e) {
             throw new UnkownErrorException("Could not call ImageManager::make on Asset #{$this->asset->id}. Error: {$e->getMessage()}.");
         }
@@ -423,12 +431,9 @@ class ImageAsset
     }
 
     /**
-     * @param \Intervention\Image\Image $image The image instance
-     * @param \Intervention\Image\ImageManager $manager The manager instance
-     * @return \Intervention\Image\Image
      * @throws \Assets\Error\FilterNotFoundException
      */
-    private function applyModifications(Image $image, ImageManager $manager): Image
+    private function applyModifications(ImageInterface $image, ImageManagerInterface $manager): ImageInterface
     {
         $modifications = $this->modifications;
         unset($modifications['noApi']);
@@ -437,33 +442,36 @@ class ImageAsset
             if (str_contains($method, 'filter_')) {
                 $filterClassName = Strings::after($method, 'filter_') ?? '';
                 if (!class_exists($filterClassName)) {
-                    throw new FilterNotFoundException("Filter {$filterClassName} does not exist. ");
+                    throw new FilterNotFoundException(
+                        sprintf(
+                            'Filter `%s` does not exist.',
+                            $filterClassName,
+                        ),
+                    );
+                }
+                if (!is_a($filterClassName, FilterInterface::class, allow_string: true)) {
+                    throw new FilterNotFoundException(
+                        sprintf(
+                            'Filter `%s` does not implement `%s`.',
+                            $filterClassName,
+                            FilterInterface::class,
+                        ),
+                    );
                 }
 
-                /**
-                 * @var \Intervention\Image\Filters\FilterInterface $filter
-                 */
-                $filter = new $filterClassName($manager, ...$params);
-                $image = $filter->applyFilter($image);
+                $image = $filterClassName::create($manager, ...$params)->applyFilter($image);
                 continue;
             }
 
             $params = is_array($params) ? $params : [$params];
-            $image->{$method}(...$params);
+            $image->modify($method, $params);
         }
 
         return $image;
     }
 
-    /**
-     * @return \Intervention\Image\ImageManager
-     */
-    private function getImageManager(): ImageManager
+    private function getImageManager(): ImageManagerInterface
     {
-        $driver = Configure::read('AssetsPlugin.ImageAsset.driver', 'gd');
-
-        return new ImageManager([
-            'driver' => $driver,
-        ]);
+        return ImageManagerLocator::getImageManager();
     }
 }
