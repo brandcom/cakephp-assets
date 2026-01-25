@@ -9,6 +9,7 @@ use Assets\Error\ModificationFailedException;
 use Assets\ImageCreation\ImageInterface;
 use Intervention\Image\MediaType;
 use Intervention\Image\Interfaces as Intervention;
+use Nette\Utils\FileSystem;
 
 final class InterventionImageFacade implements ImageInterface
 {
@@ -42,8 +43,14 @@ final class InterventionImageFacade implements ImageInterface
 
     public function save(string $absolutePath, ?int $quality, ?string $format): void
     {
-        if ($format !== null) {
-            $absolutePath .= $absolutePath . '.' . $format;
+        if ($format !== null && !str_ends_with($absolutePath, '.' . $format)) {
+            $absolutePath .= '.' . $format;
+        }
+
+        $dir = dirname($absolutePath);
+
+        if (!is_dir($dir)) {
+            FileSystem::createDir($dir);
         }
 
         $this->interventionImage->save($absolutePath, quality: $quality);
@@ -64,6 +71,7 @@ final class InterventionImageFacade implements ImageInterface
                     $callback = $this->legacyMdifiersMap[$modifier] ?? null;
                     if ($callback !== null && is_callable($callback)) {
                         $callback($this->interventionImage, ...$params);
+                        return $this->interventionImage;
                     }
                 }
 

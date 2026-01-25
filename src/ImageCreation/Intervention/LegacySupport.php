@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Assets\ImageCreation\Intervention;
 
 use Assets\Error\ModificationFailedException;
+use Intervention\Image\Encoders\FileExtensionEncoder;
+use Intervention\Image\FileExtension;
 use Intervention\Image\Image;
+use Intervention\Image\Interfaces\EncodedImageInterface;
 
 final class LegacySupport
 {
@@ -50,9 +53,17 @@ final class LegacySupport
         throw new ModificationFailedException('legacy fallback for crop not implemented');
     }
 
-    public static function legacyEncode(Image $image, mixed ...$params): Image
+    public static function legacyEncode(Image $image, mixed ...$params): EncodedImageInterface
     {
-        throw new ModificationFailedException('legacy fallback for encode not implemented');
+        $format = $params[0] ?? null;
+
+        if (!is_string($format)) {
+            throw new ModificationFailedException('no format given');
+        }
+
+        $encoder = new FileExtensionEncoder(FileExtension::from($format));
+
+        return $image->encode($encoder);
     }
 
     public static function legacyExif(Image $image, mixed ...$params): Image
