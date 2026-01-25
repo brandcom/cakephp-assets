@@ -5,6 +5,7 @@ namespace Assets\Utilities;
 
 use Assets\Error\FileNotFoundException;
 use Assets\Error\FilterNotFoundException;
+use Assets\Error\ModificationFailedException;
 use Assets\Error\UnkownErrorException;
 use Assets\ImageCreation\FilterInterface;
 use Assets\ImageCreation\ImageInterface;
@@ -459,12 +460,35 @@ final class ImageAsset
                     );
                 }
 
-                $image = $filterClassName::create($manager, ...$params)->applyFilter($image);
+                try {
+                    $image = $filterClassName::create($manager, ...$params)->applyFilter($image);
+                } catch (\Throwable $throwable) {
+                    throw new ModificationFailedException(
+                        sprintf(
+                            'Unable to apply filter `%s` with params %s.',
+                            $filterClassName,
+                            var_export($params, true),
+                        ),
+                        previous: $throwable,
+                    );
+                }
                 continue;
             }
 
             $params = is_array($params) ? $params : [$params];
-            $image->modify($method, $params);
+
+            try {
+                $image->modify($method, $params);
+            } catch (\Throwable $throwable) {
+                throw new ModificationFailedException(
+                    sprintf(
+                        'Unable to modify image with method `%s` and params %s.',
+                        $method,
+                        var_export($params, true),
+                    ),
+                    previous: $throwable,
+                );
+            }
         }
 
         return $image;
