@@ -10,7 +10,7 @@ use Cake\Core\PluginApplicationInterface;
 /**
  * Plugin for Assets
  */
-class Plugin extends BasePlugin
+class AssetsPlugin extends BasePlugin
 {
     /**
      * Load all the plugin configuration and bootstrap logic.
