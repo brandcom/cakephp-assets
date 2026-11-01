@@ -127,19 +127,17 @@ class AssetsTable extends Table
      * @param \ArrayObject $options Options passed to the event
      * @return \Cake\ORM\Query\SelectQuery
      */
-    public function beforeFind(EventInterface $e, SelectQuery $query, ArrayObject $options): SelectQuery
+    public function beforeFind(EventInterface $e, SelectQuery $query, ArrayObject $options): void
     {
-        return $query->orderByDesc('modified');
+        $query->orderByDesc('modified');
     }
 
-	public function afterDelete(EventInterface $e, Asset $entity, ArrayObject $options): bool
+	public function afterDelete(EventInterface $e, Asset $entity, ArrayObject $options): void
 	{
 		if (Configure::read('AssetsPlugin.AssetsTable.deleteFile') === true) {
 			FileSystem::delete($entity->absolute_path);
 		}
-
-		return true;
-	}
+    }
 
     /**
      * @return string
