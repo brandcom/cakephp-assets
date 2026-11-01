@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Migrations\AbstractMigration;
-
-class AssetsAddAssetsTable extends AbstractMigration
+class AssetsAddAssetsTable extends Migrations\BaseMigration
 {
     /**
      * Up Method.
